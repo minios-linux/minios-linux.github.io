@@ -120,7 +120,7 @@
             .then(response => response.json())
             .then(data => {
                 const release = data;
-                const asset = release.assets.find(asset => asset.name.includes("minios-bookworm-flux-minimum-es-lkm-aufs-i386-xz"));
+                const asset = release.assets.find(asset => asset.name.includes("minios-bookworm-flux-minimum-es-lkm-aufs-i386-zstd"));
                 if (asset) {
                     console.log("File found: ", asset.name);
                     setTimeout(() => {
