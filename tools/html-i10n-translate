@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+
+import argparse
+from bs4 import BeautifulSoup, NavigableString
+import json
+import os
+import logging
+from colorama import Fore, Style, init
+
+# Initialize colorama
+init(autoreset=True)
+
+def load_translations(json_file):
+    """Loads translations from the given JSON file."""
+    if not os.path.isfile(json_file):
+        raise FileNotFoundError(f"The file {json_file} does not exist.")
+
+    with open(json_file, "r", encoding="utf8") as file:
+        try:
+            data = json.load(file)
+        except json.JSONDecodeError:
+            raise ValueError(f"Error decoding JSON from file {json_file}.")
+
+    logging.info(f"Loaded translations from {json_file}{Style.RESET_ALL}")
+    return data.get("translations", {})
+
+def translate_html(html_file, translations, output_file):
+    """Translates text in the given HTML file using the provided translations and writes it to an output file."""
+    if not os.path.isfile(html_file):
+        raise FileNotFoundError(f"The file {html_file} does not exist.")
+
+    with open(html_file, "r", encoding="utf8") as file:
+        contents = file.read()
+
+    if not contents:
+        raise ValueError(f"The file {html_file} is empty or cannot be read.")
+
+    logging.info(f"Translating HTML file {Fore.BLUE}{html_file}{Style.RESET_ALL}")
+    soup = BeautifulSoup(contents, 'lxml')
+
+    def translate_text(node):
+        if isinstance(node, NavigableString):
+            text = ' '.join(node.split())
+            if text in translations:
+                translation = translations[text]
+                logging.info(f"Found text to translate: {Fore.GREEN}{text}{Style.RESET_ALL}")
+                node.replace_with(translation)
+                logging.info(f"Translated text: {Fore.GREEN}{text} -> {Fore.YELLOW}{translation}{Style.RESET_ALL}")
+        else:
+            for child in node.contents:
+                translate_text(child)
+
+    for tag in soup.find_all(['title', 'span', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+        logging.info(f"Translating tag: {Fore.CYAN}{tag.name}{Style.RESET_ALL}")
+        translate_text(tag)
+
+    with open(output_file, "w", encoding="utf8") as file:
+        file.write(soup.prettify())
+
+    logging.info(f"Saved translated HTML to {Fore.BLUE}{output_file}{Style.RESET_ALL}")
+
+def main():
+    """The main function that parses the command-line arguments and calls the appropriate functions."""
+    parser = argparse.ArgumentParser(
+        description="Translate HTML file using provided JSON translations.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=(
+            "Requirements:\n"
+            "For Debian-based systems, install required packages with:\n"
+            "    sudo apt-get install python3-bs4 python3-colorama\n"
+            "For other systems, ensure the following Python modules are installed:\n"
+            "    beautifulsoup4, colorama"
+        )
+    )
+    parser.add_argument("-i", "--input", help="The HTML file to translate. The file must have an .html extension.", required=True)
+    parser.add_argument("-t", "--translations", help="The JSON file containing translations. The file must have a .json extension.", required=True)
+    parser.add_argument("-o", "--output", help="The HTML file to output translated text. The file must have an .html extension.", required=True)
+    parser.add_argument("-v", "--verbose", help="Increase output verbosity", action="store_true")
+
+    args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO, format='%(message)s')
+
+    if not args.input.lower().endswith('.html'):
+        parser.error("The input file must have an .html extension.")
+
+    if not args.translations.lower().endswith('.json'):
+        parser.error("The translations file must have a .json extension.")
+
+    if not args.output.lower().endswith('.html'):
+        parser.error("The output file must have an .html extension.")
+
+    try:
+        translations = load_translations(args.translations)
+        translate_html(args.input, translations, args.output)
+    except (FileNotFoundError, ValueError, IOError) as e:
+        parser.error(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
