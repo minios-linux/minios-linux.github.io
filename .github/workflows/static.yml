@@ -28,27 +28,45 @@ jobs:
         uses: actions/configure-pages@v2
 
       - name: Upload main site
+        run: |
+          echo "Uploading main site..."
+          mkdir -p site/main
+          cp -r ./* site/main/
+          cd site/main
         uses: actions/upload-pages-artifact@v1
         with:
-          path: '.' # Загрузка основного сайта из корня репозитория
+          path: './site/main'
 
       - name: Clone Wiki Repository
         run: |
-          git clone https://github.com/minios-linux/minios-live.wiki.git wiki
+          git clone https://github.com/minios-linux/minios-live.wiki.git site/wiki
+
+      - name: Install Jekyll
+        run: |
+          echo "Installing Jekyll..."
+          sudo apt-get update
+          sudo apt-get install -y ruby-full build-essential zlib1g-dev
+          echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc
+          echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
+          echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
+          source ~/.bashrc
+          gem install jekyll bundler
 
       - name: Build and Upload Wiki
         run: |
           echo "Building wiki..."
-          mkdir -p site/wiki
-          cp -r wiki/* site/wiki/
           cd site/wiki
           jekyll build --destination _site
-          mv _site/* ../../wiki
+          mv _site/* .
+
+      - name: Remove index.html from wiki
+        run: |
+          rm ./index.html
 
       - name: Upload Wiki
         uses: actions/upload-pages-artifact@v1
         with:
-          path: './wiki'
+          path: './site/wiki'
 
       - name: Deploy to GitHub Pages
         id: deployment
