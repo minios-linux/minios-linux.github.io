@@ -64,7 +64,10 @@
         "Why does MiniOS take up more space than my favorite portable distribution?": "Почему MiniOS занимает больше места, чем мой любимый портативный дистрибутив?",
         "How to install?": "Как установить?",
         "How to change the language?": "Как изменить язык?",
-        "What else do I need to know?": "Что ещё нужно знать?"
+        "What else do I need to know?": "Что ещё нужно знать?",
+        "Thank you for downloading MiniOS. The download should start soon. If it does not, click": "Благодарим вас за загрузку MiniOS. Загрузка должна начаться в ближайшее время. Если этого не произойдет, нажмите ",
+        "and select the distribution yourself.": " и выберите дистрибутив самостоятельно.",
+        "here": "здесь"
     },
     "legacy": {}
 }

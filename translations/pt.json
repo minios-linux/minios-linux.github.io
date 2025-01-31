@@ -64,7 +64,10 @@
         "Why does MiniOS take up more space than my favorite portable distribution?": "Por que o MiniOS ocupa mais espaço do que minha distribuição portátil favorita?",
         "How to install?": "Como instalar?",
         "How to change the language?": "Como alterar o idioma?",
-        "What else do I need to know?": "O que mais eu preciso saber?"
+        "What else do I need to know?": "O que mais eu preciso saber?",
+        "Thank you for downloading MiniOS. The download should start soon. If it does not, click": "Obrigado por baixar o MiniOS. O download deve começar em breve. Se não começar, clique ",
+        "and select the distribution yourself.": " e selecione a distribuição você mesmo.",
+        "here": "aqui"
     },
     "legacy": {}
 }
