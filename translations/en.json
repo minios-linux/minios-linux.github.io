@@ -4,7 +4,7 @@
         "MiniOS - Fast. Simple. Reliable.": "",
         "MiniOS": "",
         "Fast. Simple. Reliable.": "",
-        "Choose your destiny": "",
+        "Choose edition": "",
         "MiniOS is a lightweight and fast Debian-based modular Linux distribution that runs directly from a USB drive. Its main advantages are versatility and flexibility of customization. The system can be run on almost any hardware supporting x86 architecture, supports most popular installation programs, allows you to customize many parameters to perform any task, whether it is replacing a desktop distribution or developing an embedded system.": "",
         "Many compact distributions sacrifice visual design quality, EFI support, and use powerful compression algorithms to reduce the size of the media. This reduces usability, limits the ability to run on different devices, and negatively affects performance. In MiniOS, we strive to find a balance between size, speed, convenience, and appearance, creating a product that takes up less space than desktop distributions while maintaining their convenience.": "",
         "You can install MiniOS": "",
