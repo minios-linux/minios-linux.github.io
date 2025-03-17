@@ -140,41 +140,23 @@
             // Check if all required parameters are provided
             if (!distribution || !desktopEnvironment || !packageVariant || !architecture || !version) {
                 console.error("Missing required parameters. Please provide d, de, pv, a, and v.");
-                return; // This is now valid inside a function.
+                return;
             }
 
-            // Construct the GitHub API URL
-            const apiUrl = `https://api.github.com/repos/minios-linux/minios-live/releases/tags/${version}`;
+            // Remove the "v" prefix from the version for the file name
+            const versionWithoutV = version.startsWith('v') ? version.substring(1) : version;
 
-            // Construct the filename to search for
-            const fileName = `minios-${distribution}-${desktopEnvironment}-${packageVariant}-${architecture}`;
-            console.log("Searching for filename:", fileName);
+            // Construct the direct download URL
+            const fileName = `minios-${distribution}-${desktopEnvironment}-${packageVariant}-${architecture}-${versionWithoutV}.iso`;
+            const downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/${fileName}`;
 
-            fetch(apiUrl)
-                .then(response => {
-                    console.log("API Response:", response);
-                    return response.json();
-                })
-                .then(data => {
-                    const release = data;
-                    console.log("Release data:", release);
+            console.log("Constructed URL:", downloadUrl);
 
-                    // Find the asset by name, using includes for partial matching
-                    const asset = release.assets.find(asset => asset.name.includes(fileName));
-
-                    if (asset) {
-                        console.log("File found:", asset.name);
-                        // Redirect to the download URL after a 3-second delay
-                        setTimeout(() => {
-                            const downloadUrl = asset.browser_download_url;
-                            console.log("Redirecting to:", downloadUrl);
-                            window.location.href = downloadUrl;
-                        }, 3000);
-                    } else {
-                        console.error("File not found:", fileName, "Available assets:", release.assets.map(a => a.name));
-                    }
-                })
-                .catch(error => console.error("Error fetching release data:", error));
+            // Redirect to the download URL after a 2-second delay
+            setTimeout(() => {
+                console.log("Redirecting to:", downloadUrl);
+                window.location.href = downloadUrl;
+            }, 2000);
         }
 
         // Call the main function
