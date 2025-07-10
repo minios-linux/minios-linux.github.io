@@ -8,48 +8,74 @@
 
 // Get the user's language from the URL
 let urlParams = new URLSearchParams(window.location.search);
+
+// Debug mode flag - enabled when 'debug' parameter is present in URL
+const DEBUG_MODE = urlParams.has('debug');
 let userLanguage = urlParams.get('lang');
 let languages = navigator.languages;
-console.log(`Supported languages: ${languages}`);
+if (DEBUG_MODE) console.log(`Supported languages: ${languages}`);
 
 if (!userLanguage) {
-    console.log("No 'lang' parameter in URL, falling back to browser language.");
+    if (DEBUG_MODE) console.log("No 'lang' parameter in URL, falling back to browser language.");
     userLanguage = navigator.language || navigator.userLanguage;
-    console.log(`Browser language detected: ${userLanguage}`);
+    if (DEBUG_MODE) console.log(`Browser language detected: ${userLanguage}`);
 }
 
 if (!userLanguage) {
-    console.warn("No language detected. Falling back to 'en' as default.");
+    if (DEBUG_MODE) console.warn("No language detected. Falling back to 'en' as default.");
     userLanguage = "en"; // Default to English
 }
 
 let languageNames = new Intl.DisplayNames(['en'], { type: 'language' });
 let fullLanguageName = userLanguage ? languageNames.of(userLanguage.substr(0, 2)) : 'Unknown';
 
-console.log(`Detected language: ${userLanguage}`);
-console.log(`Language name: ${fullLanguageName}`);
+if (DEBUG_MODE) console.log(`Detected language: ${userLanguage}`);
+if (DEBUG_MODE) console.log(`Language name: ${fullLanguageName}`);
 
 
 // If no language parameter is provided in the URL, get the user's language from the browser
 if (!userLanguage) {
     userLanguage = navigator.language || navigator.userLanguage;
 }
-userLanguage = userLanguage.substr(0, 2); // Use only the language code (e.g., "en", "ru")
+
+// Store original language code and short language code
+let originalLanguage = userLanguage;
+let shortLanguage = userLanguage.substr(0, 2); // Use only the language code (e.g., "en", "ru")
 
 // Determine the language file to use based on the user's language
-let languageFile = `translations/${userLanguage}.json`;
+// First try the full language code (e.g., "en-US"), then fallback to short code (e.g., "en")
+let languageFile = `translations/${originalLanguage}.json`;
 
-fetch(languageFile)
-    .then((response) => {
+// Function to try loading translation file
+async function loadTranslations() {
+    try {
+        if (DEBUG_MODE) console.log(`Trying to load: ${languageFile}`);
+        let response = await fetch(languageFile);
         if (!response.ok) {
-            throw new Error('Translation file not found');
+            throw new Error('Full language file not found');
         }
-        return response.json();
-    })
+        return await response.json();
+    } catch (error) {
+        // If full language file not found, try short language code
+        if (originalLanguage !== shortLanguage) {
+            if (DEBUG_MODE) console.log(`Full language file not found, trying short: translations/${shortLanguage}.json`);
+            languageFile = `translations/${shortLanguage}.json`;
+            let response = await fetch(languageFile);
+            if (!response.ok) {
+                throw new Error('Translation file not found');
+            }
+            return await response.json();
+        } else {
+            throw error;
+        }
+    }
+}
+
+loadTranslations()
     .then((translations) => {
-        // Select all elements with title, span, a, p, h1, h2, h3, h4, h5, h6 tags
+        // Select all elements with title, span, a, p, h1, h2, h3, h4, h5, h6, li, strong tags
         let elements = document.querySelectorAll(
-            'title, span, a, p, h1, h2, h3, h4, h5, h6'
+            'title, span, a, p, h1, h2, h3, h4, h5, h6, li, strong'
         );
         elements.forEach((element) => {
             // Get all child nodes of the element
@@ -71,8 +97,8 @@ fetch(languageFile)
                         node.nodeValue = translations['translations'][translationKey];
                     }
 
-                    console.log('TK:', translationKey);
-                    console.log('TR:', translations['translations'][translationKey]);
+                    if (DEBUG_MODE) console.log('TK:', translationKey);
+                    if (DEBUG_MODE) console.log('TR:', translations['translations'][translationKey]);
                 }
             });
         });
@@ -89,12 +115,14 @@ fetch(languageFile)
             // Ensure the link points to another page and avoid duplicate "lang" parameters
             if (!href.includes('lang=')) {
                 let updatedHref = href.includes('?')
-                    ? `${href}&lang=${userLanguage}`
-                    : `${href}?lang=${userLanguage}`;
+                    ? `${href}&lang=${shortLanguage}`
+                    : `${href}?lang=${shortLanguage}`;
                 link.setAttribute('href', updatedHref);
             }
         });
 
     })
     // If the translation file is not found, log an error
-    .catch((error) => console.log('Translation not performed:', error));
+    .catch((error) => {
+        if (DEBUG_MODE) console.log('Translation not performed:', error);
+    });

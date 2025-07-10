@@ -29,7 +29,7 @@ class HTMLTextExtractor:
 
         soup = BeautifulSoup(contents, 'lxml')
         texts = []
-        for tag in ['title', 'span', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+        for tag in ['title', 'span', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'strong']:
             for element in soup.find_all(tag):
                 logging.info(f"Processing tag: {Fore.CYAN}{tag}{Style.RESET_ALL}")
                 if element.contents:
@@ -64,8 +64,16 @@ class JSONConverter:
         except (FileNotFoundError, json.JSONDecodeError):
             existing_data = {"translations": {}, "legacy": {}}
 
-        if "translations" not in existing_data and "legacy" not in existing_data:
-            existing_data = {"translations": existing_data, "legacy": {}}
+        # Ensure existing_data is a dict and has required keys
+        if not isinstance(existing_data, dict):
+            existing_data = {"translations": {}, "legacy": {}}
+        # Provide default empty dicts for missing keys
+        existing_data.setdefault("translations", {})
+        existing_data.setdefault("legacy", {})
+
+        # Ensure both keys exist
+        existing_data.setdefault("translations", {})
+        existing_data.setdefault("legacy", {})
 
         existing_translations = {k.strip(): v.strip() for k, v in existing_data["translations"].items()}
         existing_legacy = {k.strip(): v.strip() if isinstance(v, str) else v for k, v in existing_data["legacy"].items()}
@@ -110,7 +118,7 @@ class JSONConverter:
 def main():
     """The main function that parses the command-line arguments and calls the appropriate functions."""
     parser = argparse.ArgumentParser(
-        description="Translate HTML file using provided JSON translations.",
+        description="Translate HTML files using provided JSON translations.",
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=(
             "Requirements:\n"
@@ -120,7 +128,7 @@ def main():
             "    beautifulsoup4, colorama"
         )
     )
-    parser.add_argument("-i", "--input", help="The HTML file to translate. The file must have an .html extension.", required=True)
+    parser.add_argument("-i", "--input", nargs='+', help="The HTML file(s) to translate. Each file must have an .html extension.", required=True)
     parser.add_argument("-o", "--output", help="The JSON file to store extracted text. The file must have a .json extension.", required=True)
     parser.add_argument("-k", "--keep-missing", help="Keep missing translations in the translations section instead of moving them to legacy.", action="store_true")
     parser.add_argument("-v", "--verbose", help="Increase output verbosity", action="store_true")
@@ -130,17 +138,21 @@ def main():
     if args.verbose:
         logging.basicConfig(level=logging.INFO, format='%(message)s')
 
-    if not args.input.lower().endswith('.html'):
-        parser.error("The input file must have an .html extension.")
+    for input_file in args.input:
+        if not input_file.lower().endswith('.html'):
+            parser.error(f"The input file {input_file} must have an .html extension.")
 
     if not args.output.lower().endswith('.json'):
         parser.error("The output file must have a .json extension.")
 
     try:
-        extractor = HTMLTextExtractor(args.input)
-        texts = extractor.extract_text()
+        all_texts = []
+        for input_file in args.input:
+            extractor = HTMLTextExtractor(input_file)
+            texts = extractor.extract_text()
+            all_texts.extend(texts)
 
-        converter = JSONConverter(texts, args.output, args.keep_missing)
+        converter = JSONConverter(all_texts, args.output, args.keep_missing)
         converter.convert_to_json()
     except (FileNotFoundError, ValueError, IOError) as e:
         print(f"Error: {e}")

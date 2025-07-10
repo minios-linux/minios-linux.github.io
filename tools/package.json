@@ -1,0 +1,24 @@
+{
+  "name": "html-i10n-extract",
+  "version": "1.0.0",
+  "description": "Extract text from HTML files for translation using Node.js",
+  "main": "html-i10n-extract.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "commander": "^11.0.0"
+  },
+  "bin": {
+    "html-i10n-extract": "./html-i10n-extract.js"
+  },
+  "keywords": [
+    "html",
+    "i18n",
+    "translation",
+    "extract"
+  ],
+  "author": "crims0n <crims0n@minios.dev>",
+  "license": "GPL-3.0"
+}
