@@ -31,20 +31,20 @@ class HTMLTextExtractor {
                 console.log(`Processing tag: ${tag}`);
                 
                 // Get all child nodes of the element (mimicking JavaScript childNodes)
-                const childNodes = this.children || [];
-                
-                // Process direct text content and child nodes
                 $(this).contents().each(function() {
                     // Check if the node is a text node (nodeType === 3 in browser)
                     if (this.type === 'text') {
-                        // Get the translation key from the node's text content
-                        let translationKey = $(this).text().trim();
+                        // Get the translation key from the node's text content (nodeValue in browser)
+                        let translationKey = this.data ? this.data.trim() : '';
                         
-                        // Clean whitespace like JavaScript does
-                        translationKey = translationKey.replace(/\s+/g, ' ').trim();
+                        // Check if the translation key is a single non-breaking space, dot, asterisk, space, or empty
+                        // This matches the exact logic from translate.js lines 91-93
+                        if ([' ', '.', '*', '\xa0', ''].includes(translationKey)) {
+                            return; // Skip this iteration
+                        }
                         
-                        // Skip the same characters as JavaScript translate.js
-                        if (![' ', '.', '*', '\xa0', ''].includes(translationKey)) {
+                        // Only add non-empty translation keys
+                        if (translationKey) {
                             texts.push(translationKey);
                             console.log(`Extracted text: ${translationKey}`);
                         }
@@ -54,7 +54,11 @@ class HTMLTextExtractor {
         });
 
         console.log(`Finished extracting text from ${this.htmlFile}`);
-        return texts;
+        
+        // Remove duplicates and return sorted array
+        const uniqueTexts = [...new Set(texts)].sort();
+        console.log(`Found ${texts.length} total texts, ${uniqueTexts.length} unique`);
+        return uniqueTexts;
     }
 }
 
