@@ -6,51 +6,31 @@ This repository contains the official MiniOS website with internationalization s
 
 To translate the site into your language, you can use the files in the **translations** folder as an example.
 
-## Text Extraction Tools
+## Text Extraction Tool
 
-The `tools/` directory contains utilities to extract translatable text from HTML files:
+The `tools/` directory contains a Node.js utility to extract translatable text from HTML files:
 
-### Node.js Version (Recommended)
-
-The Node.js version provides the most accurate extraction that matches browser behavior:
+### Installation and Usage
 
 ```bash
 # Install dependencies
 cd tools && npm install
 
-# Extract text for translation
-node html-i10n-extract.js -i ../index.html -o ../translations/your-language.json -v
+# Extract text for translation from both HTML files
+node html-i10n-extract.js -i ../index.html ../download.html -o ../translations/your-language.json -v
 
 # Update existing translation file
-node html-i10n-extract.js -i ../index.html -o ../translations/ru.json -v
+node html-i10n-extract.js -i ../index.html ../download.html -o ../translations/ru.json -v
 ```
 
 **Features:**
-- ✅ 100% compatibility with browser JavaScript behavior
-- ✅ Automatic text node separation (handles `<br>` tags correctly)
-- ✅ Accurate DOM processing with Cheerio
-- ✅ No preprocessing required
-
-### Python Version
-
-Alternative Python implementation:
-
-```bash
-# Install dependencies (Debian/Ubuntu)
-sudo apt-get install python3-bs4 python3-colorama
-
-# Extract text for translation
-python3 html-i10n-extract -i index.html -o translations/your-language.json -v
-
-# Update existing translation file  
-python3 html-i10n-extract -i index.html -o translations/ru.json -v
-```
-
-**Note:** The Python version includes preprocessing to handle HTML quirks, but the Node.js version is recommended for better accuracy.
+- ✅ Accurate text extraction matching browser behavior
+- ✅ Multi-file processing (extracts from `index.html` and `download.html`)
+- ✅ Whitespace-aware extraction
 
 ### Command Line Options
 
-Both tools support the same command line interface:
+The extraction tool supports the following options:
 
 - `-i, --input <files...>` - HTML file(s) to process (required)
 - `-o, --output <file>` - JSON file for extracted text (required)  
@@ -63,21 +43,21 @@ Both tools support the same command line interface:
 # Extract from single file
 node tools/html-i10n-extract.js -i index.html -o translations/new-lang.json -v
 
-# Extract from multiple files
-node tools/html-i10n-extract.js -i index.html about.html -o translations/combined.json -v
+# Extract from both website files (recommended)
+node tools/html-i10n-extract.js -i index.html download.html -o translations/new-lang.json -v
 
 # Update existing translations (moves unused to legacy section)
-node tools/html-i10n-extract.js -i index.html -o translations/ru.json -v
+node tools/html-i10n-extract.js -i index.html download.html -o translations/ru.json -v
 
 # Keep all existing translations 
-node tools/html-i10n-extract.js -i index.html -o translations/ru.json -k -v
+node tools/html-i10n-extract.js -i index.html download.html -o translations/ru.json -k -v
 ```
 
 ## Translation Workflow
 
 1. **Extract translatable text:**
    ```bash
-   node tools/html-i10n-extract.js -i index.html -o translations/new-language.json -v
+   node tools/html-i10n-extract.js -i index.html download.html -o translations/new-language.json -v
    ```
 
 2. **Translate the text:** Edit the JSON file and add translations for empty strings
@@ -114,3 +94,37 @@ The website uses `js/translate.js` to automatically detect and apply translation
 - Fallback to English if translation not found
 
 Add `?debug` to the URL to see translation debugging information in the console.
+
+## Development Tools
+
+The `tools/` directory contains several utilities for translation development and quality assurance:
+
+### 🔍 String Extraction
+- **`html-i10n-extract.js`** - Main extraction tool for translatable strings
+
+### 🧪 Testing & Analysis Tools
+- **`console-debug-simulator.js`** - Simulate browser console output for translation debugging
+- **`website-text-comparison.js`** - Compare English vs translated versions with detailed statistics
+
+### 🗺️ SEO Tools
+- **`update-sitemap.js`** - Generate sitemap.xml based on available translations
+
+### 📊 Analysis Commands
+
+```bash
+# Compare translation coverage
+node tools/website-text-comparison.js ru
+
+# Debug translation extraction
+node tools/console-debug-simulator.js
+
+# Update sitemap with current translations
+node tools/update-sitemap.js
+
+# Validate translation files
+node tools/update-sitemap.js --validate
+```
+
+## Technical Details
+
+The translation system processes text nodes from HTML elements (`title`, `span`, `a`, `p`, `h1-h6`, `li`, `strong`) and preserves original formatting while replacing content with translations.
