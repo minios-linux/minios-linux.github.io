@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
-    "commander": "^11.0.0"
+    "commander": "^11.0.0",
+    "puppeteer": "^24.15.0"
   },
   "bin": {
     "html-i10n-extract": "./html-i10n-extract.js"
