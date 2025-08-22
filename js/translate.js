@@ -94,7 +94,13 @@ loadTranslations()
 
                     // If a translation exists for the key, replace the node's text content
                     if (translations['translations'][translationKey]) {
-                        node.nodeValue = translations['translations'][translationKey];
+                        // Preserve leading and trailing whitespace from original nodeValue
+                        const originalNodeValue = node.nodeValue;
+                        const leadingWhitespace = originalNodeValue.match(/^\s*/)[0];
+                        const trailingWhitespace = originalNodeValue.match(/\s*$/)[0];
+                        
+                        // Replace only the trimmed content, keeping original whitespace
+                        node.nodeValue = leadingWhitespace + translations['translations'][translationKey] + trailingWhitespace;
                     }
 
                     if (DEBUG_MODE) console.log('TK:', translationKey);
