@@ -39,6 +39,7 @@
         "Home": "Início",
         "Ideal Use Cases": "Casos de uso ideais",
         "Italiano": "Italiano",
+        "Leave Review": "Deixar avaliação",
         "MB RAM": "MB de RAM",
         "MiniOS": "MiniOS",
         "MiniOS - Fast. Simple. Reliable.": "MiniOS - Rápido. Simples. Fiável.",
@@ -61,6 +62,7 @@
         "System Recovery": "Recuperação do sistema",
         "Three Editions": "Três edições",
         "Toolbox": "Toolbox",
+        "Torrent Download": "Descarregar por torrent",
         "True Portability": "Verdadeira portabilidade",
         "Ultra": "Ultra",
         "Universal Compatibility": "Compatibilidade universal",
@@ -71,5 +73,7 @@
         "and select the distribution yourself.": "e selecione a distribuição manualmente.",
         "here": "aqui"
     },
-    "legacy": {}
+    "legacy": {
+        "Download from GitHub": ""
+    }
 }

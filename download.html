@@ -127,6 +127,7 @@
             const architecture = urlParams.get('a');
             const desktopEnvironment = urlParams.get('de');
             const version = urlParams.get('v');
+            const torrent = urlParams.get('torrent');
 
             // Log the received parameters
             console.log("Received parameters:", {
@@ -134,7 +135,8 @@
                 desktopEnvironment,
                 packageVariant,
                 architecture,
-                version
+                version,
+                torrent
             });
 
             // Check if all required parameters are provided
@@ -146,9 +148,16 @@
             // Remove the "v" prefix from the version for the file name
             const versionWithoutV = version.startsWith('v') ? version.substring(1) : version;
 
-            // Construct the direct download URL
-            const fileName = `minios-${distribution}-${desktopEnvironment}-${packageVariant}-${architecture}-${versionWithoutV}.iso`;
-            const downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/${fileName}`;
+            // Construct the download URL (torrent or ISO)
+            let downloadUrl;
+            if (torrent === '1') {
+                // Download torrent file
+                downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/minios-${versionWithoutV}.torrent`;
+            } else {
+                // Download ISO file
+                const fileName = `minios-${distribution}-${desktopEnvironment}-${packageVariant}-${architecture}-${versionWithoutV}.iso`;
+                downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/${fileName}`;
+            }
 
             console.log("Constructed URL:", downloadUrl);
 

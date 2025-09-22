@@ -39,6 +39,7 @@
         "Home": "Beranda",
         "Ideal Use Cases": "Kasus Penggunaan Ideal",
         "Italiano": "Italiano",
+        "Leave Review": "Tinggalkan ulasan",
         "MB RAM": "MB RAM",
         "MiniOS": "MiniOS",
         "MiniOS - Fast. Simple. Reliable.": "MiniOS - Cepat. Sederhana. Andal.",
@@ -61,6 +62,7 @@
         "System Recovery": "Pemulihan Sistem",
         "Three Editions": "Tiga Edisi",
         "Toolbox": "Toolbox",
+        "Torrent Download": "Unduh Torrent",
         "True Portability": "Portabilitas Sebenarnya",
         "Ultra": "Ultra",
         "Universal Compatibility": "Kompatibilitas Universal",
@@ -71,5 +73,7 @@
         "and select the distribution yourself.": "dan pilih distribusi sendiri.",
         "here": "di sini"
     },
-    "legacy": {}
+    "legacy": {
+        "Download from GitHub": ""
+    }
 }
