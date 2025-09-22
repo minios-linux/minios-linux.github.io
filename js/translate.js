@@ -114,7 +114,8 @@ loadTranslations()
             let href = link.getAttribute('href');
 
             // Skip if no href attribute or if it's an anchor (#) or external resource
-            if (!href || href.startsWith('#') || href.includes('mailto:') || href.includes('tel:')) {
+            if (!href || href.startsWith('#') || href.includes('mailto:') || href.includes('tel:') || 
+                href.startsWith('http://') || href.startsWith('https://')) {
                 return;
             }
 
