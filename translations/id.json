@@ -35,6 +35,7 @@
         "Español": "Español",
         "Exquisite design and pleasing speed: we prove that performance does not have to sacrifice beauty and convenience. MiniOS features a meticulously crafted design, a modern and intuitive interface. It works incredibly fast, even on the most modest computers, helping you focus on your tasks instead of waiting. A philosophy of simplicity and meaning: every component in MiniOS exists for an important reason. Nothing superfluous - only what you really need for comfortable and efficient work. This is not reduced functionality or a bloated software package, but the perfect balance created for your convenience.": "Desain yang indah dan kecepatan yang menyenangkan: kami membuktikan bahwa performa tidak harus mengorbankan keindahan dan kenyamanan. MiniOS memiliki desain yang dibuat dengan cermat, antarmuka modern dan intuitif. Bekerja sangat cepat, bahkan di komputer paling sederhana, membantu Anda fokus pada tugas daripada menunggu. Filosofi kesederhanaan dan makna: setiap komponen di MiniOS ada untuk alasan penting. Tidak ada yang berlebihan - hanya yang benar-benar Anda butuhkan untuk bekerja nyaman dan efisien. Ini bukan fungsi yang dikurangi atau paket perangkat lunak yang membengkak, tetapi keseimbangan sempurna untuk kenyamanan Anda.",
         "Fast. Simple. Reliable.": "Cepat. Sederhana. Andal.",
+        "Flux": "Flux",
         "Français": "Français",
         "Home": "Beranda",
         "Ideal Use Cases": "Kasus Penggunaan Ideal",
@@ -77,7 +78,5 @@
         "and select the distribution yourself.": "dan pilih distribusi sendiri.",
         "here": "di sini"
     },
-    "legacy": {
-        "Download from GitHub": ""
-    }
+    "legacy": {}
 }

@@ -19,7 +19,7 @@
         "1.7 GB of disk space": "1,7 ГБ дискового пространства",
         "64-bit 1 GHz processor": "64-битный процессор 1 ГГц",
         "800 MB of disk space": "800 МБ дискового пространства",
-        "About MiniOS": "О MiniOS",
+        "About MiniOS": "Подробнее о MiniOS",
         "Bahasa Indonesia": "Bahasa Indonesia",
         "Choose edition": "Выберите редакцию",
         "Community": "Сообщество",
@@ -35,6 +35,7 @@
         "Español": "Español",
         "Exquisite design and pleasing speed: we prove that performance does not have to sacrifice beauty and convenience. MiniOS features a meticulously crafted design, a modern and intuitive interface. It works incredibly fast, even on the most modest computers, helping you focus on your tasks instead of waiting. A philosophy of simplicity and meaning: every component in MiniOS exists for an important reason. Nothing superfluous - only what you really need for comfortable and efficient work. This is not reduced functionality or a bloated software package, but the perfect balance created for your convenience.": "Изысканный дизайн и приятная скорость: мы доказываем, что производительность не должна жертвовать красотой и удобством. MiniOS отличается тщательно проработанным дизайном, современным и интуитивно понятным интерфейсом. Он работает невероятно быстро даже на самых скромных компьютерах, помогая вам сосредоточиться на своих задачах, а не на ожидании. Философия простоты и осмысленности: каждый компонент в MiniOS существует по важной причине. Ничего лишнего - только то, что вам действительно нужно для комфортной и эффективной работы. Это не урезанная функциональность или раздутый пакет программ, а идеальный баланс, созданный для вашего удобства.",
         "Fast. Simple. Reliable.": "Быстро. Просто. Надежно.",
+        "Flux": "Flux",
         "Français": "Français",
         "Home": "Главная",
         "Ideal Use Cases": "Идеальные сценарии использования",
@@ -77,15 +78,5 @@
         "and select the distribution yourself.": "и выберите дистрибутив самостоятельно.",
         "here": "здесь"
     },
-    "legacy": {
-        "* It is recommended to use the 64-bit version if your processor supports it. The 32-bit version lacks additional drivers for Realtek, Broadcom wireless adapters and drivers for modern Intel sound cards.": "* Рекомендуется использовать 64-битную версию, если ваш процессор её поддерживает. 32-битная версия не имеет дополнительных драйверов для беспроводных адаптеров Realtek, Broadcom и драйверов для современных звуковых карт Intel.",
-        "1 GHz processor": "Процессор 1 ГГц",
-        "1.5 GB of disk space": "1,5 ГБ дискового пространства",
-        "32bit": "32-бит",
-        "64bit": "64-бит",
-        "700 MB of disk space": "700 МБ дискового пространства",
-        "900 MB of disk space": "900 МБ дискового пространства",
-        "MB RAM (32-bit)": "МБ ОЗУ (32-бит)",
-        "MB RAM (64-bit), 512": "МБ ОЗУ (64-бит), 512"
-    }
+    "legacy": {}
 }
