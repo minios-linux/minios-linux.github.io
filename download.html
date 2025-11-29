@@ -112,6 +112,41 @@
                         </ul>
                     </div>
 
+                    <div class="fix-11-12 margin-top-3">
+                        <ul class="flex">
+                            <li class="col-12-12 center">
+                                <h3 class="ae-5 margin-bottom-2">
+                                    Support the Project
+                                </h3>
+                            </li>
+                        </ul>
+                        <ul class="flex">
+                            <li class="col-12-12 center">
+                                <p class="ae-6 small margin-bottom-2" align="justify">
+                                    <span class="opacity-9">MiniOS is completely free and open-source. Developing and maintaining this project requires significant time, effort, and resources. Your support means everything to us! By starring our GitHub repository and subscribing to our Telegram channel, you give us the motivation and encouragement to continue improving MiniOS and adding new features. Every star, every subscriber - is a sign that our work matters. Help us make MiniOS even better!</span>
+                                </p>
+                            </li>
+                        </ul>
+                        <ul class="flex">
+                            <li class="col-6-12 center">
+                                <a href="https://github.com/minios-linux/minios-live" class="ae-7 button gradient" target="_blank" style="width: 100%; background: linear-gradient(135deg, #24292e 0%, #2d333b 100%);">
+                                    <svg style="height:21px;vertical-align:middle;margin-right:8px;">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#github"></use>
+                                    </svg>
+                                    Star on GitHub
+                                </a>
+                            </li>
+                            <li class="col-6-12 center">
+                                <a href="https://t.me/minios_news" class="ae-7 button gradient" target="_blank" style="width: 100%; background: linear-gradient(135deg, #0088cc 0%, #229ED9 100%);">
+                                    <svg style="height:21px;vertical-align:middle;margin-right:8px;">
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#telegram"></use>
+                                    </svg>
+                                    Subscribe to News
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -127,6 +162,7 @@
             const architecture = urlParams.get('a');
             const desktopEnvironment = urlParams.get('de');
             const version = urlParams.get('v');
+            const torrent = urlParams.get('torrent');
 
             // Log the received parameters
             console.log("Received parameters:", {
@@ -134,7 +170,8 @@
                 desktopEnvironment,
                 packageVariant,
                 architecture,
-                version
+                version,
+                torrent
             });
 
             // Check if all required parameters are provided
@@ -146,9 +183,16 @@
             // Remove the "v" prefix from the version for the file name
             const versionWithoutV = version.startsWith('v') ? version.substring(1) : version;
 
-            // Construct the direct download URL
-            const fileName = `minios-${distribution}-${desktopEnvironment}-${packageVariant}-${architecture}-${versionWithoutV}.iso`;
-            const downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/${fileName}`;
+            // Construct the download URL (torrent or ISO)
+            let downloadUrl;
+            if (torrent === '1') {
+                // Download torrent file
+                downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/minios-${versionWithoutV}.torrent`;
+            } else {
+                // Download ISO file
+                const fileName = `minios-${distribution}-${desktopEnvironment}-${packageVariant}-${architecture}-${versionWithoutV}.iso`;
+                downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/${fileName}`;
+            }
 
             console.log("Constructed URL:", downloadUrl);
 
