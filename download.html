@@ -157,6 +157,7 @@
         function main() {
             // Get parameters from the URL
             const urlParams = new URLSearchParams(window.location.search);
+            const collection = urlParams.get('collection');
             const distribution = urlParams.get('d');
             const packageVariant = urlParams.get('pv');
             const architecture = urlParams.get('a');
@@ -166,6 +167,7 @@
 
             // Log the received parameters
             console.log("Received parameters:", {
+                collection,
                 distribution,
                 desktopEnvironment,
                 packageVariant,
@@ -174,24 +176,38 @@
                 torrent
             });
 
-            // Check if all required parameters are provided
-            if (!distribution || !desktopEnvironment || !packageVariant || !architecture || !version) {
-                console.error("Missing required parameters. Please provide d, de, pv, a, and v.");
-                return;
-            }
-
             // Remove the "v" prefix from the version for the file name
-            const versionWithoutV = version.startsWith('v') ? version.substring(1) : version;
+            const versionWithoutV = version ? (version.startsWith('v') ? version.substring(1) : version) : '';
 
-            // Construct the download URL (torrent or ISO)
+            // Construct the download URL
             let downloadUrl;
-            if (torrent === '1') {
-                // Download torrent file
-                downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/minios-${versionWithoutV}.torrent`;
+
+            // Check if this is a collection download
+            if (collection === 'complete') {
+                if (!version) {
+                    console.error("Missing version parameter for collection download.");
+                    return;
+                }
+                // Download complete collection torrent
+                // Remove the last .0 from version for collection torrent (5.1.0 -> 5.1)
+                const collectionVersion = versionWithoutV.replace(/\.0$/, '');
+                downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/minios-${collectionVersion}-complete-collection.torrent`;
             } else {
-                // Download ISO file
-                const fileName = `minios-${distribution}-${desktopEnvironment}-${packageVariant}-${architecture}-${versionWithoutV}.iso`;
-                downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/${fileName}`;
+                // Check if all required parameters are provided for regular download
+                if (!distribution || !desktopEnvironment || !packageVariant || !architecture || !version) {
+                    console.error("Missing required parameters. Please provide d, de, pv, a, and v.");
+                    return;
+                }
+
+                // Construct the download URL (torrent or ISO)
+                if (torrent === '1') {
+                    // Download torrent file
+                    downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/minios-${versionWithoutV}.torrent`;
+                } else {
+                    // Download ISO file
+                    const fileName = `minios-${distribution}-${desktopEnvironment}-${packageVariant}-${architecture}-${versionWithoutV}.iso`;
+                    downloadUrl = `https://github.com/minios-linux/minios-live/releases/download/${version}/${fileName}`;
+                }
             }
 
             console.log("Constructed URL:", downloadUrl);
