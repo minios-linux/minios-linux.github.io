@@ -15,18 +15,20 @@
         "- rescue unbootable systems and recover data": "- retten Sie nicht startbare Systeme und stellen Daten wieder her",
         "- supports both modern UEFI and legacy BIOS systems": "- unterstützt sowohl moderne UEFI- als auch Legacy-BIOS-Systeme",
         "- your data, settings, and files travel with you": "- Ihre Daten, Einstellungen und Dateien reisen mit Ihnen",
-        "1.2 GB of disk space": "1,2 GB Speicherplatz",
-        "1.7 GB of disk space": "1,7 GB Speicherplatz",
+        "1.16 GB of disk space": "1,16 GB Speicherplatz",
+        "1.69 GB of disk space": "1,69 GB Speicherplatz",
         "64-bit 1 GHz processor": "64-Bit 1-GHz-Prozessor",
-        "800 MB of disk space": "800 MB Speicherplatz",
+        "812 MB of disk space": "812 MB Speicherplatz",
         "About MiniOS": "Über MiniOS",
-        "Bahasa Indonesia": "",
+        "Bahasa Indonesia": "Bahasa Indonesia",
         "Choose edition": "Ausgabe wählen",
         "Community": "Community",
+        "Companion Project: PocketHandyBox": "Begleitprojekt: PocketHandyBox",
         "Complete Collection (17.92 GB)": "Vollständige Sammlung (17,92 GB)",
         "Complete Collection Available": "Vollständige Sammlung verfügbar",
         "Core Capabilities": "Kernfunktionen",
         "Debian Foundation": "Debian-Grundlage",
+        "Debian/Devuan-based live system with pre-installed NVIDIA drivers (580.x-340.x), OpenZFS support, and hardware testing tools (CPU-X, GParted, TestDisk, WHDD)": "Live-System auf Debian/Devuan-Basis mit vorinstallierten NVIDIA-Treibern (580.x-340.x), OpenZFS-Unterstützung und Hardware-Testtools (CPU-X, GParted, TestDisk, WHDD)",
         "Deutsch": "Deutsch",
         "Development & Testing": "Entwicklung & Tests",
         "Documentation": "Dokumentation",
@@ -70,6 +72,7 @@
         "True Portability": "Echte Portabilität",
         "Ultra": "Ultra",
         "Universal Compatibility": "Universelle Kompatibilität",
+        "Visit Project →": "Projekt besuchen →",
         "We're on DistroWatch": "Wir sind auf DistroWatch",
         "What is MiniOS?": "Was ist MiniOS?",
         "Русский": "Русский",
@@ -81,5 +84,9 @@
         "and select the distribution yourself.": "und wählen Sie die Distribution selbst aus.",
         "here": "hier"
     },
-    "legacy": {}
+    "legacy": {
+        "1.2 GB of disk space": "1,2 GB Speicherplatz",
+        "1.7 GB of disk space": "1,7 GB Speicherplatz",
+        "800 MB of disk space": "800 MB Speicherplatz"
+    }
 }

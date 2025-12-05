@@ -1,7 +1,7 @@
 {
     "_comment": "This is a generated JSON file. Modify with care.",
     "translations": {
-        "768": "",
+        "768": "768",
         "* You can run the system with less RAM than specified, but this will adversely affect usability and speed.": "* Anda dapat menjalankan sistem dengan RAM lebih sedikit dari yang ditentukan, tetapi ini akan mempengaruhi kegunaan dan kecepatan.",
         "- Standard, Toolbox, Ultra": "- Standar, Toolbox, Ultra",
         "- access to vast repositories and proven stability": "- akses ke repositori besar dan stabilitas yang terbukti",
@@ -15,18 +15,20 @@
         "- rescue unbootable systems and recover data": "- menyelamatkan sistem yang tidak bisa boot dan memulihkan data",
         "- supports both modern UEFI and legacy BIOS systems": "- mendukung sistem UEFI modern dan BIOS lama",
         "- your data, settings, and files travel with you": "- data, pengaturan, dan file Anda ikut bersama Anda",
-        "1.2 GB of disk space": "1.2 GB ruang disk",
-        "1.7 GB of disk space": "1.7 GB ruang disk",
+        "1.16 GB of disk space": "1,16 GB ruang disk",
+        "1.69 GB of disk space": "1,69 GB ruang disk",
         "64-bit 1 GHz processor": "Prosesor 64-bit 1 GHz",
-        "800 MB of disk space": "800 MB ruang disk",
+        "812 MB of disk space": "812 MB ruang disk",
         "About MiniOS": "Tentang MiniOS",
         "Bahasa Indonesia": "Bahasa Indonesia",
         "Choose edition": "Pilih edisi",
         "Community": "Komunitas",
+        "Companion Project: PocketHandyBox": "Proyek pendamping: PocketHandyBox",
         "Complete Collection (17.92 GB)": "Koleksi Lengkap (17,92 GB)",
         "Complete Collection Available": "Koleksi Lengkap Tersedia",
         "Core Capabilities": "Kemampuan Inti",
         "Debian Foundation": "Berbasis Debian",
+        "Debian/Devuan-based live system with pre-installed NVIDIA drivers (580.x-340.x), OpenZFS support, and hardware testing tools (CPU-X, GParted, TestDisk, WHDD)": "Sistem live berbasis Debian/Devuan dengan driver NVIDIA pra-instal (580.x-340.x), dukungan OpenZFS, dan alat pengujian perangkat keras (CPU-X, GParted, TestDisk, WHDD)",
         "Deutsch": "Deutsch",
         "Development & Testing": "Pengembangan & Pengujian",
         "Documentation": "Dokumentasi",
@@ -70,6 +72,7 @@
         "True Portability": "Portabilitas Sebenarnya",
         "Ultra": "Ultra",
         "Universal Compatibility": "Kompatibilitas Universal",
+        "Visit Project →": "Kunjungi proyek →",
         "We're on DistroWatch": "Kami ada di DistroWatch",
         "What is MiniOS?": "Apa itu MiniOS?",
         "Русский": "Русский",
@@ -81,5 +84,9 @@
         "and select the distribution yourself.": "dan pilih distribusi sendiri.",
         "here": "di sini"
     },
-    "legacy": {}
+    "legacy": {
+        "1.2 GB of disk space": "1.2 GB ruang disk",
+        "1.7 GB of disk space": "1.7 GB ruang disk",
+        "800 MB of disk space": "800 MB ruang disk"
+    }
 }
