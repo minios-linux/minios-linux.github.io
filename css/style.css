@@ -507,7 +507,6 @@
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
             pointer-events: none;
             -webkit-box-reflect: below 0px linear-gradient(to bottom, transparent 40%, rgba(255, 255, 255, 0.1) 100%);
-            box-reflect: below 0px linear-gradient(to bottom, transparent 40%, rgba(255, 255, 255, 0.1) 100%);
         }
 
         .slide-img.active {
