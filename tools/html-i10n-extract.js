@@ -53,6 +53,35 @@ class HTMLTextExtractor {
             });
         });
 
+        // Extract from heroSlides in scripts
+        $('script').each(function() {
+            const scriptContent = $(this).html();
+            if (scriptContent && scriptContent.includes('const heroSlides = [')) {
+                console.log('Found heroSlides in script');
+                const heroSlidesMatch = scriptContent.match(/const heroSlides\s*=\s*(\[[\s\S]*?\]);/);
+                if (heroSlidesMatch && heroSlidesMatch[1]) {
+                    const slidesArrayStr = heroSlidesMatch[1];
+                    // Match title and desc
+                    const titleMatches = [...slidesArrayStr.matchAll(/title:\s*"([^"]+)"/g)];
+                    const descMatches = [...slidesArrayStr.matchAll(/desc:\s*"([^"]+)"/g)];
+                    
+                    titleMatches.forEach(match => {
+                        if (match[1]) {
+                            texts.push(match[1]);
+                            console.log(`Extracted script text: ${match[1]}`);
+                        }
+                    });
+                    
+                    descMatches.forEach(match => {
+                        if (match[1]) {
+                            texts.push(match[1]);
+                            console.log(`Extracted script text: ${match[1]}`);
+                        }
+                    });
+                }
+            }
+        });
+
         console.log(`Finished extracting text from ${this.htmlFile}`);
         
         // Remove duplicates and return sorted array
