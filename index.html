@@ -5,6 +5,16 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>MiniOS - Fast. Simple. Reliable.</title>
 
+    <!-- Theme Detection - Must run before any rendering -->
+    <script>
+        (function() {
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (!isDark) {
+                document.documentElement.classList.add('light-theme');
+            }
+        })();
+    </script>
+
     <!-- Fonts -->
     <link rel="stylesheet" href="./css/fonts.css">
 
@@ -29,7 +39,7 @@
     <script src="./js/lucide.min.js"></script>
     <script src="./js/translate.js" type="text/javascript"></script>
     <script>
-        // Theme Logic - Executed immediately to prevent FOUC
+        // Theme Logic - Listen for system theme changes
         (function() {
             const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -41,14 +51,18 @@
                     document.documentElement.classList.remove('light-theme');
                     document.body && document.body.classList.remove('light-theme');
                 }
-                // Update icons if they exist (might be called before DOM load)
+                // Update icons
                 if (typeof updateThemeIcons === 'function') {
                     updateThemeIcons(!isDark);
                 }
             }
 
-            // Always use system preference
-            applyTheme(systemTheme.matches);
+            // Sync body class with html when DOM is ready
+            if (document.body) {
+                if (!systemTheme.matches) {
+                    document.body.classList.add('light-theme');
+                }
+            }
 
             // Listen for system theme changes
             try {
@@ -85,7 +99,7 @@
         gtag('config', 'G-DW6V3D3DVZ');
     </script>
 </head>
-<body class="theme-standard light-theme">
+<body class="theme-standard">
 
     <div class="bg-mesh"></div>
     <div class="bg-noise"></div>
