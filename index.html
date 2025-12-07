@@ -31,10 +31,10 @@
     <script>
         // Theme Logic - Executed immediately to prevent FOUC
         (function() {
-            const systemTheme = window.matchMedia('(prefers-color-scheme: light)');
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-            function applyTheme(isLight) {
-                if (isLight) {
+            function applyTheme(isDark) {
+                if (!isDark) {
                     document.documentElement.classList.add('light-theme');
                     document.body && document.body.classList.add('light-theme');
                 } else {
@@ -43,7 +43,7 @@
                 }
                 // Update icons if they exist (might be called before DOM load)
                 if (typeof updateThemeIcons === 'function') {
-                    updateThemeIcons(isLight);
+                    updateThemeIcons(!isDark);
                 }
             }
 
