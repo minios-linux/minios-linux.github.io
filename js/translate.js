@@ -73,6 +73,12 @@ async function loadTranslations() {
 
 loadTranslations()
     .then((translations) => {
+        // Expose translations globally
+        window.translations = translations['translations'];
+        window.t = function(key) {
+            return (window.translations && window.translations[key]) ? window.translations[key] : key;
+        };
+
         // Select all elements with title, span, a, p, h1, h2, h3, h4, h5, h6, li, strong tags
         let elements = document.querySelectorAll(
             'title, span, a, p, h1, h2, h3, h4, h5, h6, li, strong'
@@ -128,8 +134,13 @@ loadTranslations()
             }
         });
 
+        // Dispatch event when translations are ready
+        window.dispatchEvent(new Event('translationsLoaded'));
+
     })
     // If the translation file is not found, log an error
     .catch((error) => {
         if (DEBUG_MODE) console.log('Translation not performed:', error);
+        // Define fallback t function even if translation fails
+        window.t = function(key) { return key; };
     });
