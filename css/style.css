@@ -600,6 +600,10 @@
         @media (max-width: 900px) {
             .feature-card {
                 min-height: auto;
+                transition-delay: 0.3s;
+            }
+            .feature-card ul {
+                transition-delay: 0.3s;
             }
             .feature-card.spacer {
                 display: none;
