@@ -25,24 +25,24 @@ class HTMLTextExtractor {
 
         // Select all elements with the same tags as JavaScript translate.js
         const tags = ['title', 'span', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'strong'];
-        
+
         tags.forEach(tag => {
             $(tag).each(function() {
                 console.log(`Processing tag: ${tag}`);
-                
+
                 // Get all child nodes of the element (mimicking JavaScript childNodes)
                 $(this).contents().each(function() {
                     // Check if the node is a text node (nodeType === 3 in browser)
                     if (this.type === 'text') {
                         // Get the translation key from the node's text content (nodeValue in browser)
                         let translationKey = this.data ? this.data.trim() : '';
-                        
+
                         // Check if the translation key is a single non-breaking space, dot, asterisk, space, or empty
                         // This matches the exact logic from translate.js lines 91-93
                         if ([' ', '.', '*', '\xa0', ''].includes(translationKey)) {
                             return; // Skip this iteration
                         }
-                        
+
                         // Only add non-empty translation keys
                         if (translationKey) {
                             texts.push(translationKey);
@@ -64,14 +64,14 @@ class HTMLTextExtractor {
                     // Match title and desc
                     const titleMatches = [...slidesArrayStr.matchAll(/title:\s*"([^"]+)"/g)];
                     const descMatches = [...slidesArrayStr.matchAll(/desc:\s*"([^"]+)"/g)];
-                    
+
                     titleMatches.forEach(match => {
                         if (match[1]) {
                             texts.push(match[1]);
                             console.log(`Extracted script text: ${match[1]}`);
                         }
                     });
-                    
+
                     descMatches.forEach(match => {
                         if (match[1]) {
                             texts.push(match[1]);
@@ -83,7 +83,7 @@ class HTMLTextExtractor {
         });
 
         console.log(`Finished extracting text from ${this.htmlFile}`);
-        
+
         // Remove duplicates and return sorted array
         const uniqueTexts = [...new Set(texts)].sort();
         console.log(`Found ${texts.length} total texts, ${uniqueTexts.length} unique`);
@@ -92,15 +92,16 @@ class HTMLTextExtractor {
 }
 
 class JSONConverter {
-    constructor(texts, jsonFile, keepMissing) {
+    constructor(texts, jsonFile, keepMissing, clearLegacy) {
         this.texts = texts;
         this.jsonFile = jsonFile;
         this.keepMissing = keepMissing;
+        this.clearLegacy = clearLegacy;
     }
 
     convertToJSON() {
         let existingData = { "translations": {}, "legacy": {} };
-        
+
         try {
             if (fs.existsSync(this.jsonFile)) {
                 const fileContent = fs.readFileSync(this.jsonFile, 'utf8');
@@ -120,28 +121,28 @@ class JSONConverter {
         // Trim keys and values
         const existingTranslations = {};
         const existingLegacy = {};
-        
+
         Object.keys(existingData.translations).forEach(k => {
             const key = k.trim();
-            const value = typeof existingData.translations[k] === 'string' ? 
+            const value = typeof existingData.translations[k] === 'string' ?
                 existingData.translations[k].trim() : existingData.translations[k];
             existingTranslations[key] = value;
         });
 
         Object.keys(existingData.legacy).forEach(k => {
             const key = k.trim();
-            const value = typeof existingData.legacy[k] === 'string' ? 
+            const value = typeof existingData.legacy[k] === 'string' ?
                 existingData.legacy[k].trim() : existingData.legacy[k];
             existingLegacy[key] = value;
         });
 
         const newTranslations = {};
-        
+
         this.texts.forEach(text => {
             if (text) {
                 const translation = existingTranslations[text] || existingLegacy[text] || "";
                 newTranslations[text] = translation;
-                
+
                 if (translation) {
                     console.log(`Found existing translation: ${text} -> ${translation}`);
                 } else {
@@ -160,8 +161,8 @@ class JSONConverter {
                     missingTranslations[k] = existingTranslations[k];
                 }
             });
-            
-            legacyTranslations = { ...existingLegacy };
+
+            legacyTranslations = this.clearLegacy ? {} : { ...existingLegacy };
             Object.assign(newTranslations, missingTranslations);
         } else {
             Object.keys(existingTranslations).forEach(k => {
@@ -169,13 +170,17 @@ class JSONConverter {
                     missingTranslations[k] = existingTranslations[k];
                 }
             });
-            
-            Object.keys(existingLegacy).forEach(k => {
-                if (!(k in newTranslations)) {
-                    legacyTranslations[k] = existingLegacy[k];
-                }
-            });
-            
+
+            if (this.clearLegacy) {
+                legacyTranslations = {};
+            } else {
+                Object.keys(existingLegacy).forEach(k => {
+                    if (!(k in newTranslations)) {
+                        legacyTranslations[k] = existingLegacy[k];
+                    }
+                });
+            }
+
             Object.assign(legacyTranslations, missingTranslations);
         }
 
@@ -205,6 +210,7 @@ function main() {
         .requiredOption('-i, --input <files...>', 'The HTML file(s) to translate. Each file must have an .html extension.')
         .requiredOption('-o, --output <file>', 'The JSON file to store extracted text. The file must have a .json extension.')
         .option('-k, --keep-missing', 'Keep missing translations in the translations section instead of moving them to legacy.')
+        .option('-c, --clear-legacy', 'Clear the legacy section completely (remove all old unused translations).')
         .option('-v, --verbose', 'Increase output verbosity')
         .addHelpText('after', `
 Requirements:
@@ -237,14 +243,14 @@ For other systems, ensure the following Node.js modules are installed:
 
     try {
         const allTexts = [];
-        
+
         options.input.forEach(inputFile => {
             const extractor = new HTMLTextExtractor(inputFile);
             const texts = extractor.extractText();
             allTexts.push(...texts);
         });
 
-        const converter = new JSONConverter(allTexts, options.output, options.keepMissing);
+        const converter = new JSONConverter(allTexts, options.output, options.keepMissing, options.clearLegacy);
         converter.convertToJSON();
     } catch (error) {
         console.error(`Error: ${error.message}`);

@@ -41,6 +41,7 @@ if (!userLanguage) {
 // Store original language code and short language code
 let originalLanguage = userLanguage;
 let shortLanguage = userLanguage.substr(0, 2); // Use only the language code (e.g., "en", "ru")
+let currentActiveLanguage = originalLanguage;
 
 // Determine the language file to use based on the user's language
 // First try the full language code (e.g., "en-US"), then fallback to short code (e.g., "en")
@@ -54,6 +55,8 @@ async function loadTranslations() {
         if (!response.ok) {
             throw new Error('Full language file not found');
         }
+        document.documentElement.lang = originalLanguage;
+        currentActiveLanguage = originalLanguage;
         return await response.json();
     } catch (error) {
         // If full language file not found, try short language code
@@ -64,6 +67,8 @@ async function loadTranslations() {
             if (!response.ok) {
                 throw new Error('Translation file not found');
             }
+            document.documentElement.lang = shortLanguage;
+            currentActiveLanguage = shortLanguage;
             return await response.json();
         } else {
             throw error;
@@ -78,6 +83,20 @@ loadTranslations()
         window.t = function(key) {
             return (window.translations && window.translations[key]) ? window.translations[key] : key;
         };
+
+        // Update language selector UI
+        const currentLangElem = document.getElementById('currentLang');
+        if (currentLangElem) {
+            currentLangElem.textContent = currentActiveLanguage.toUpperCase();
+        }
+
+        // Update active state in language dropdown
+        document.querySelectorAll('.lang-dropdown a').forEach(link => {
+            link.classList.remove('active');
+            if (link.dataset.lang === currentActiveLanguage) {
+                link.classList.add('active');
+            }
+        });
 
         // Select all elements with title, span, a, p, h1, h2, h3, h4, h5, h6, li, strong tags
         let elements = document.querySelectorAll(
@@ -104,7 +123,7 @@ loadTranslations()
                         const originalNodeValue = node.nodeValue;
                         const leadingWhitespace = originalNodeValue.match(/^\s*/)[0];
                         const trailingWhitespace = originalNodeValue.match(/\s*$/)[0];
-                        
+
                         // Replace only the trimmed content, keeping original whitespace
                         node.nodeValue = leadingWhitespace + translations['translations'][translationKey] + trailingWhitespace;
                     }
@@ -120,7 +139,7 @@ loadTranslations()
             let href = link.getAttribute('href');
 
             // Skip if no href attribute or if it's an anchor (#) or external resource
-            if (!href || href.startsWith('#') || href.includes('mailto:') || href.includes('tel:') || 
+            if (!href || href.startsWith('#') || href.includes('mailto:') || href.includes('tel:') ||
                 href.startsWith('http://') || href.startsWith('https://')) {
                 return;
             }
@@ -128,8 +147,8 @@ loadTranslations()
             // Ensure the link points to another page and avoid duplicate "lang" parameters
             if (!href.includes('lang=')) {
                 let updatedHref = href.includes('?')
-                    ? `${href}&lang=${shortLanguage}`
-                    : `${href}?lang=${shortLanguage}`;
+                    ? `${href}&lang=${currentActiveLanguage}`
+                    : `${href}?lang=${currentActiveLanguage}`;
                 link.setAttribute('href', updatedHref);
             }
         });
