@@ -201,7 +201,7 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-snap-type: y proximity;
+            scroll-snap-type: y mandatory;
         }
 
         section {
@@ -902,6 +902,7 @@
 
         /* Mobile */
         @media (max-width: 900px) {
+            html { scroll-snap-type: none; }
             .grid-3 { grid-template-columns: 1fr; }
             section {
                 scroll-margin-top: 60px;
@@ -990,6 +991,7 @@
         }
         /* Footer */
         .site-footer {
+            scroll-snap-align: start;
             padding: 60px 0 40px;
             background: rgba(15, 17, 21, 0.5);
             border-top: 1px solid var(--glass-border);
@@ -1307,3 +1309,85 @@ html.light-theme .torrent-header { border-bottom-color: rgba(0,0,0,0.08); }
 html.light-theme .t-group { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.05); }
 html.light-theme .t-item { border-bottom-color: rgba(0,0,0,0.05); }
 html.light-theme .t-desc { color: rgba(0,0,0,0.8); }
+
+/* Page Indicators */
+.page-indicators {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 100;
+}
+
+.indicator-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.indicator-dot.active {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+    transform: scale(1.2);
+    border-color: var(--accent);
+}
+
+.indicator-dot:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.indicator-label {
+    position: absolute;
+    right: 25px;
+    background: rgba(15, 17, 21, 0.8);
+    backdrop-filter: blur(4px);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    border: 1px solid var(--glass-border);
+}
+
+.indicator-dot:hover .indicator-label {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Light Theme Support for Indicators */
+html.light-theme .indicator-dot {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+html.light-theme .indicator-dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+html.light-theme .indicator-dot:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+html.light-theme .indicator-label {
+    background: rgba(255, 255, 255, 0.8);
+    color: #0f1115;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 900px) {
+    .page-indicators { display: none; }
+}

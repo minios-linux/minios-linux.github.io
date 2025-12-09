@@ -35,6 +35,19 @@
     <link rel="alternate" hreflang="ru" href="https://minios.dev/?lang=ru">
     <link rel="alternate" hreflang="x-default" href="https://minios.dev/">
 
+    <!-- Page Indicators -->
+    <div class="page-indicators">
+        <a href="#home" class="indicator-dot active" aria-label="Home" onclick="smoothScrollTo(event, 'home')">
+            <span class="indicator-label">Home</span>
+        </a>
+        <a href="#features" class="indicator-dot" aria-label="Features" onclick="smoothScrollTo(event, 'features')">
+            <span class="indicator-label">Features</span>
+        </a>
+        <a href="#download" class="indicator-dot" aria-label="Download" onclick="smoothScrollTo(event, 'download')">
+            <span class="indicator-label">Download</span>
+        </a>
+    </div>
+
     <!-- Scripts -->
     <script src="./js/lucide.min.js"></script>
     <script src="./js/translate.js" type="text/javascript"></script>
@@ -237,10 +250,10 @@
                 <h1>MiniOS is <br><span class="hero-title-accent" id="heroTitle" >Standard</span></h1>
                 <p class="hero-desc" id="heroDesc" >A clean, efficient XFCE desktop for daily tasks. Balanced performance for everyone.</p>
                 <div class="btn-group">
-                    <a href="#download" class="btn btn-primary">
+                    <a href="#download" class="btn btn-primary" onclick="smoothScrollTo(event, 'download')">
                         Get It Now
                     </a>
-                    <a href="#features" class="btn btn-glass">
+                    <a href="#features" class="btn btn-glass" onclick="smoothScrollTo(event, 'features')">
                         Why MiniOS?
                     </a>
                 </div>
@@ -1308,11 +1321,110 @@
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
+            
+            // Initialize Intersection Observer for Indicators
+            const sections = ['home', 'features', 'download'];
+            const observerOptions = {
+                root: null,
+                rootMargin: '-50% 0px -50% 0px', // Trigger when section is in middle of viewport
+                threshold: 0
+            };
 
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateActiveIndicator(entry.target.id);
+                    }
+                });
+            }, observerOptions);
 
-
-
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) observer.observe(el);
+            });
         });
+
+        function updateActiveIndicator(id) {
+            document.querySelectorAll('.indicator-dot').forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.getAttribute('href') === '#' + id) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function smoothScrollTo(e, targetId) {
+            e.preventDefault();
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            const sections = ['home', 'features', 'download'];
+            const targetIndex = sections.indexOf(targetId);
+            
+            // Find current index
+            let currentIndex = 0;
+            let minDiff = Infinity;
+            sections.forEach((id, index) => {
+                const el = document.getElementById(id);
+                const rect = el.getBoundingClientRect();
+                const diff = Math.abs(rect.top);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    currentIndex = index;
+                }
+            });
+
+            // If already there, do nothing
+            if (currentIndex === targetIndex) return;
+
+            // Identify intermediates
+            const intermediates = [];
+            const minIdx = Math.min(currentIndex, targetIndex);
+            const maxIdx = Math.max(currentIndex, targetIndex);
+            
+            for (let i = minIdx + 1; i < maxIdx; i++) {
+                const el = document.getElementById(sections[i]);
+                if (el) intermediates.push(el);
+            }
+
+            // Hide intermediates to make sections adjacent
+            intermediates.forEach(el => el.style.display = 'none');
+
+            // Disable snap temporarily
+            document.documentElement.style.scrollSnapType = 'none';
+            
+            // Perform smooth scroll
+            target.scrollIntoView({ behavior: 'smooth' });
+
+            // Restore layout after animation
+            setTimeout(() => {
+                // Disable smooth scroll globally to prevent jump animation
+                const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+                document.documentElement.style.scrollBehavior = 'auto';
+                
+                // Restore display
+                intermediates.forEach(el => el.style.display = '');
+                
+                // Adjust scroll position if we went down (content added above)
+                if (targetIndex > currentIndex) {
+                    let addedHeight = 0;
+                    intermediates.forEach(el => addedHeight += el.offsetHeight);
+                    document.documentElement.scrollTop += addedHeight;
+                    document.body.scrollTop += addedHeight;
+                }
+                
+                // Force reflow
+                void document.documentElement.offsetHeight; 
+                
+                // Restore styles
+                document.documentElement.style.scrollBehavior = originalScrollBehavior;
+                document.documentElement.style.scrollSnapType = '';
+                
+                // Ensure indicator is correct
+                updateActiveIndicator(targetId);
+                
+            }, 800);
+        }
     </script>
 
 </div>
