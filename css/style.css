@@ -14,7 +14,7 @@
         }
 
         /* Light Theme */
-        html.light-theme body, body.light-theme {
+        html.light-theme body, html.light-theme {
             --bg-dark: #f8fafc;
             --glass-bg: rgba(255, 255, 255, 0.7);
             --glass-border: rgba(0, 0, 0, 0.08);
@@ -25,131 +25,131 @@
             --text-muted: #64748b;
         }
 
-        html.light-theme .bg-mesh, body.light-theme .bg-mesh {
+        html.light-theme .bg-mesh, html.light-theme .bg-mesh {
             background:
                 radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.15) 0px, transparent 50%),
                 radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.08) 0px, transparent 50%);
         }
 
-        html.light-theme .bg-noise, body.light-theme .bg-noise { opacity: 0.02; }
+        html.light-theme .bg-noise, html.light-theme .bg-noise { opacity: 0.02; }
 
-        html.light-theme header, body.light-theme header {
+        html.light-theme header, html.light-theme header {
             background: rgba(248, 250, 252, 0.8);
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
 
-        html.light-theme .nav-links a:hover, body.light-theme .nav-links a:hover { color: #0f1115; }
+        html.light-theme .nav-links a:hover, html.light-theme .nav-links a:hover { color: #0f1115; }
         html.light-theme .lang-btn:hover,
         html.light-theme .theme-toggle:hover,
         html.light-theme .mobile-menu-btn:hover,
-        body.light-theme .lang-btn:hover,
-        body.light-theme .theme-toggle:hover,
-        body.light-theme .mobile-menu-btn:hover { color: #0f1115; }
+        html.light-theme .lang-btn:hover,
+        html.light-theme .theme-toggle:hover,
+        html.light-theme .mobile-menu-btn:hover { color: #0f1115; }
 
-        html.light-theme .feature-card, body.light-theme .feature-card {
+        html.light-theme .feature-card, html.light-theme .feature-card {
             background: rgba(255, 255, 255, 0.6);
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        html.light-theme .gallery-trigger, body.light-theme .gallery-trigger {
+        html.light-theme .gallery-trigger, html.light-theme .gallery-trigger {
             border: none;
         }
 
-        html.light-theme .btn-glass, body.light-theme .btn-glass {
+        html.light-theme .btn-glass, html.light-theme .btn-glass {
             background: rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(0, 0, 0, 0.1);
             color: #0f1115;
         }
-        html.light-theme .btn-glass:hover, body.light-theme .btn-glass:hover {
+        html.light-theme .btn-glass:hover, html.light-theme .btn-glass:hover {
             background: rgba(0, 0, 0, 0.1);
             border-color: #0f1115;
         }
 
-        html.light-theme .btn-primary, body.light-theme .btn-primary { color: #0f1115; }
+        html.light-theme .btn-primary, html.light-theme .btn-primary { color: #0f1115; }
 
-        body.light-theme .spec-item {
+        html.light-theme .spec-item {
             background: rgba(0, 0, 0, 0.03);
             border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
-        body.light-theme .spec-val { color: #0f1115; }
+        html.light-theme .spec-val { color: #0f1115; }
 
-        body.light-theme .tabs-nav {
+        html.light-theme .tabs-nav {
             background: rgba(0, 0, 0, 0.03);
             border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
-        body.light-theme .tab-btn.active {
+        html.light-theme .tab-btn.active {
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid rgba(0, 0, 0, 0.1);
             color: #0f1115;
         }
 
-        body.light-theme .section-header h2,
-        body.light-theme h1,
-        body.light-theme h3 {
+        html.light-theme .section-header h2,
+        html.light-theme h1,
+        html.light-theme h3 {
             color: #0f1115;
         }
 
-        body.light-theme .modal {
+        html.light-theme .modal {
             background: rgba(248, 250, 252, 0.98);
         }
 
-        body.light-theme .modal-close,
-        body.light-theme .modal-nav {
+        html.light-theme .modal-close,
+        html.light-theme .modal-nav {
             background: rgba(0, 0, 0, 0.05);
             color: #0f1115;
         }
 
-        html.light-theme .site-footer, body.light-theme .site-footer {
+        html.light-theme .site-footer, html.light-theme .site-footer {
             background: rgba(248, 250, 252, 0.8);
             border-top: 1px solid rgba(0, 0, 0, 0.08);
         }
-        html.light-theme .footer-links h4, body.light-theme .footer-links h4 {
+        html.light-theme .footer-links h4, html.light-theme .footer-links h4 {
             color: #0f1115;
         }
-        body.light-theme .modal-nav:hover {
+        html.light-theme .modal-nav:hover {
             background: var(--accent);
             color: white;
         }
 
-        body.light-theme .mobile-menu-btn,
-        body.light-theme .mobile-close {
+        html.light-theme .mobile-menu-btn,
+        html.light-theme .mobile-close {
             background: rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(0, 0, 0, 0.08);
             color: var(--text-muted);
         }
 
-        body.light-theme .mobile-nav,
-        body.light-theme .mobile-lang-menu {
+        html.light-theme .mobile-nav,
+        html.light-theme .mobile-lang-menu {
             background: rgba(248, 250, 252, 0.75);
             border-left: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        body.light-theme .mobile-nav a:hover,
-        body.light-theme .mobile-lang-menu a:hover {
+        html.light-theme .mobile-nav a:hover,
+        html.light-theme .mobile-lang-menu a:hover {
             color: #0f1115;
         }
 
-        body.light-theme .lang-dropdown {
+        html.light-theme .lang-dropdown {
             background: rgba(248, 250, 252, 0.75);
             border: 1px solid rgba(0, 0, 0, 0.1);
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        body.light-theme .lang-dropdown a {
+        html.light-theme .lang-dropdown a {
             color: var(--text-muted);
         }
-        body.light-theme .lang-dropdown a:hover {
+        html.light-theme .lang-dropdown a:hover {
             background: rgba(0, 0, 0, 0.05);
             color: #0f1115 !important;
         }
-        body.light-theme .lang-dropdown a.active {
+        html.light-theme .lang-dropdown a.active {
             color: #22d3ee !important;
         }
 
-        body.light-theme .btn-torrent {
+        html.light-theme .btn-torrent {
             background: rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
@@ -308,8 +308,8 @@
             white-space: nowrap;
         }
         .lang-btn:hover { background: rgba(255,255,255,0.1); }
-        body:not(.light-theme) .lang-btn:hover { color: white !important; border-color: rgba(255,255,255,0.2); }
-        body.light-theme .lang-btn:hover { border-color: rgba(0,0,0,0.2); }
+        html:not(.light-theme) .lang-btn:hover { color: white !important; border-color: rgba(255,255,255,0.2); }
+        html.light-theme .lang-btn:hover { border-color: rgba(0,0,0,0.2); }
         .lang-btn i { width: 18px; height: 18px; }
         .lang-dropdown {
             position: absolute;
@@ -403,7 +403,7 @@
         .lang-dropdown a:hover {
             background: rgba(255,255,255,0.1);
         }
-        body:not(.light-theme) .lang-dropdown a:hover {
+        html:not(.light-theme) .lang-dropdown a:hover {
             color: white;
         }
         .lang-dropdown a.active {
@@ -1105,7 +1105,7 @@ main .container {
     box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
 }
 
-html.light-theme .download-card, body.light-theme .download-card { background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.1); }
+html.light-theme .download-card, html.light-theme .download-card { background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0, 0, 0, 0.1); }
 
 .support-section .btn i,
 .support-section .btn svg,
@@ -1292,12 +1292,12 @@ html.light-theme .download-card, body.light-theme .download-card { background: r
 .t-desc { text-align: right; color: rgba(255,255,255,0.85); }
 
 /* Light theme support */
-html.light-theme .torrent-menu, body.light-theme .torrent-menu {
+html.light-theme .torrent-menu, html.light-theme .torrent-menu {
     background: rgba(248, 250, 252, 0.75);
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
-html.light-theme .torrent-menu a:hover, body.light-theme .torrent-menu a:hover {
+html.light-theme .torrent-menu a:hover, html.light-theme .torrent-menu a:hover {
     background: rgba(255, 255, 255, 0.8);
     border-color: rgba(0,0,0,0.1);
 }
