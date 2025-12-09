@@ -1,6 +1,7 @@
 :root {
             --bg-dark: #0f1115;
-            --glass-bg: rgba(20, 25, 35, 0.6);
+            --glass-bg: rgba(20, 25, 35, 0.3);
+            --glass-bg-hover: rgba(20, 25, 35, 0.1);
             --glass-border: rgba(255, 255, 255, 0.08);
             --glass-shine: rgba(255, 255, 255, 0.03);
             --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
@@ -16,7 +17,8 @@
         /* Light Theme */
         html.light-theme body, html.light-theme {
             --bg-dark: #f8fafc;
-            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            --glass-bg-hover: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(0, 0, 0, 0.08);
             --glass-shine: rgba(255, 255, 255, 0.8);
             --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -27,9 +29,9 @@
 
         html.light-theme .bg-mesh, html.light-theme .bg-mesh {
             background:
-                radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.08) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.25) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.15) 0px, transparent 50%);
         }
 
         html.light-theme .bg-noise, html.light-theme .bg-noise { opacity: 0.02; }
@@ -48,7 +50,7 @@
         html.light-theme .mobile-menu-btn:hover { color: #0f1115; }
 
         html.light-theme .feature-card, html.light-theme .feature-card {
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--glass-bg);
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
@@ -114,8 +116,7 @@
             color: white;
         }
 
-        html.light-theme .mobile-menu-btn,
-        html.light-theme .mobile-close {
+        html.light-theme .mobile-menu-btn {
             background: rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(0, 0, 0, 0.08);
             color: var(--text-muted);
@@ -123,7 +124,7 @@
 
         html.light-theme .mobile-nav,
         html.light-theme .mobile-lang-menu {
-            background: rgba(248, 250, 252, 0.75);
+            background: rgba(248, 250, 252, 0.95);
             border-left: 1px solid rgba(0, 0, 0, 0.1);
         }
 
@@ -133,9 +134,9 @@
         }
 
         html.light-theme .lang-dropdown {
-            background: rgba(248, 250, 252, 0.75);
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
 
         html.light-theme .lang-dropdown a {
@@ -201,7 +202,9 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-snap-type: y mandatory;
+            scroll-snap-type: y proximity;
+            background-color: var(--bg-dark);
+            height: 100%;
         }
 
         section {
@@ -216,34 +219,36 @@
         }
 
         #features {
-            justify-content: flex-start;
-            padding: 100px 0;
+            justify-content: center;
+            padding: 0;
         }
 
         .release-badge { display: inline-flex; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
+            background-color: transparent;
             color: var(--text-main);
             overflow-x: hidden;
             line-height: 1.6;
             transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100%;
         }
 
         /* Mesh Gradient Background */
         .bg-mesh {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -2;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0;
             background:
                 radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.1) 0px, transparent 50%),
                 radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.08) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(52, 211, 153, 0.05) 0px, transparent 50%);
             filter: blur(60px);
             transition: 0.5s;
+            pointer-events: none;
         }
         /* Noise Texture Overlay */
         .bg-noise {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1;
             opacity: 0.03;
             background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
             pointer-events: none;
@@ -257,7 +262,7 @@
         header {
             position: fixed; top: 0; width: 100%; padding: 15px 0;
             background: rgba(15, 17, 21, 0.7); backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--glass-border); z-index: 100;
+            border-bottom: 1px solid var(--glass-border); z-index: 1000;
         }
         .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; gap: 12px; letter-spacing: -0.02em; }
@@ -289,7 +294,9 @@
         .theme-toggle i { width: 20px; height: 20px; }
 
         /* Language Selector */
-        .lang-selector { position: relative; }
+        .lang-selector {
+            position: relative;
+        }
         .lang-btn {
             background: rgba(255,255,255,0.05);
             border: 1px solid var(--glass-border);
@@ -315,9 +322,7 @@
             position: absolute;
             top: calc(100% + 10px);
             right: 0;
-            background: rgba(15, 17, 21, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(15, 17, 21, 0.85);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 8px;
@@ -326,8 +331,8 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            z-index: 10001;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            z-index: 10010;
             display: flex;
             flex-direction: column;
         }
@@ -535,27 +540,87 @@
         .section-header h2 { font-size: 2.5rem; margin-bottom: 10px; color: white; }
 
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        .feature-wrapper {
+            position: relative;
+        }
+
         .feature-card {
             background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
             border-top: 1px solid var(--glass-shine);
             padding: 25px; border-radius: 20px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative; overflow: hidden;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
         }
+
+        /* Desktop Hover Effect: Overlay */
+        @media (min-width: 1101px) {
+            .feature-card:not(.spacer) {
+                position: absolute;
+                top: 0; left: 0;
+                min-height: 100%;
+                height: auto;
+                z-index: 1;
+            }
+            .feature-card.spacer {
+                position: relative;
+                visibility: hidden;
+                pointer-events: none;
+                z-index: -1;
+            }
+            .feature-wrapper:hover .feature-card:not(.spacer) {
+                z-index: 10;
+                box-shadow: 0 20px 60px -10px rgba(34, 211, 238, 0.4);
+                transform: translateY(-5px);
+                border-color: rgba(255,255,255,0.3);
+                background: var(--glass-bg-hover);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+            }
+            /* Ensure list shows on hover */
+            .feature-wrapper:hover .feature-card:not(.spacer) ul {
+                max-height: 200px;
+                opacity: 1;
+                margin-top: 8px !important;
+            }
+            .feature-wrapper:hover .feature-card:not(.spacer)::before { opacity: 0.2; }
+            .feature-wrapper:hover .f-icon { color: #22d3ee !important; filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.6)); transform: scale(1.15); }
+        }
+
+        /* Mobile Fallback */
+        @media (max-width: 900px) {
+            .feature-card {
+                min-height: auto;
+            }
+            .feature-card.spacer {
+                display: none;
+            }
+            .feature-card.mobile-active {
+                transform: translateY(-5px);
+                border-color: rgba(255,255,255,0.3);
+                box-shadow: 0 20px 60px -10px rgba(34, 211, 238, 0.4);
+            }
+            .feature-card.mobile-active ul {
+                max-height: 200px;
+                opacity: 1;
+                margin-top: 8px !important;
+            }
+        }
+
         .feature-card::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.3), transparent 70%);
             opacity: 0; transition: 0.4s;
             pointer-events: none;
         }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,255,255,0.3);
-            box-shadow: 0 20px 60px -10px rgba(34, 211, 238, 0.4);
-            z-index: 10;
-        }
+
         .feature-card ul {
             max-height: 0;
             opacity: 0;
@@ -563,14 +628,9 @@
             transition: all 0.4s ease;
             margin-top: 0 !important;
         }
-        .feature-card:hover ul {
-            max-height: 200px;
-            opacity: 1;
-            margin-top: 8px !important;
-        }
-        .feature-card:hover::before { opacity: 0.2; }
+
         .f-icon { width: 36px; height: 36px; margin-bottom: 16px; display: block; color: var(--text-muted); transition: 0.3s; }
-        .feature-card:hover .f-icon { color: #22d3ee !important; filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.6)); transform: scale(1.15); }
+
         .feature-card h3 { margin-bottom: 8px; font-size: 1.15rem; }
         .feature-card p { font-size: 0.9rem; }
         .feature-card ul {
@@ -579,10 +639,6 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s ease, margin-top 0.4s ease, opacity 0.3s ease;
-        }
-        .feature-card:hover ul {
-            max-height: 200px;
-            opacity: 1;
         }
 
         /* Download Tabs */
@@ -691,7 +747,7 @@
         }
         .gallery-trigger:hover .gallery-overlay {
             opacity: 1;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(16px);
         }
         .view-btn {
             background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 30px;
@@ -714,7 +770,7 @@
         /* Gallery Modal */
         .modal {
             position: fixed; inset: 0; z-index: 10002;
-            background: rgba(5, 7, 10, 0.95); backdrop-filter: blur(10px);
+            background: rgba(5, 7, 10, 0.95); backdrop-filter: blur(16px);
             display: none; justify-content: center; align-items: center;
         }
         .modal.open { display: flex; animation: fadeModal 0.3s; }
@@ -755,9 +811,7 @@
             right: -100%;
             width: 280px;
             height: 100dvh;
-            background: rgba(15, 17, 21, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(15, 17, 21, 0.95);
             border-left: 1px solid var(--glass-border);
             padding: 80px 30px 30px;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -776,18 +830,6 @@
         }
         .mobile-nav a:hover,
         .mobile-lang-menu a:hover { color: white; padding-left: 10px; }
-        .mobile-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            padding: 8px;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-        }
-        .mobile-close i { width: 24px; height: 24px; }
 
         .mobile-overlay {
             position: fixed;
@@ -978,7 +1020,7 @@
             .torrent-dropdown.active .torrent-menu {
                 transform: translateX(-50%) !important;
             }
-            
+
             .torrent-dropdown:hover .btn-torrent,
             .torrent-dropdown.active .btn-torrent {
                 color: var(--accent);
@@ -1049,6 +1091,8 @@ main .container {
 
 .download-card {
     background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
     border-top: 1px solid var(--glass-shine);
     padding: 40px; border-radius: 24px;
@@ -1177,8 +1221,8 @@ html.light-theme .download-card, html.light-theme .download-card { background: r
     left: 50%;
     transform: translateX(-50%) translateY(10px);
     background: rgba(15, 17, 21, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
     padding: 8px;
@@ -1352,7 +1396,7 @@ html.light-theme .t-desc { color: rgba(0,0,0,0.8); }
     position: absolute;
     right: 25px;
     background: rgba(15, 17, 21, 0.8);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(16px);
     color: white;
     padding: 4px 10px;
     border-radius: 6px;
