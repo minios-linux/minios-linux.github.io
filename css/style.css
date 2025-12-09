@@ -124,7 +124,9 @@
 
         html.light-theme .mobile-nav,
         html.light-theme .mobile-lang-menu {
-            background: rgba(248, 250, 252, 0.95);
+            background: rgba(248, 250, 252, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-left: 1px solid rgba(0, 0, 0, 0.1);
         }
 
@@ -811,7 +813,9 @@
             right: -100%;
             width: 280px;
             height: 100dvh;
-            background: rgba(15, 17, 21, 0.95);
+            background: rgba(15, 17, 21, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-left: 1px solid var(--glass-border);
             padding: 80px 30px 30px;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
