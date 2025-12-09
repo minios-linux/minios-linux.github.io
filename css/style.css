@@ -123,7 +123,7 @@
 
         body.light-theme .mobile-nav,
         body.light-theme .mobile-lang-menu {
-            background: rgba(248, 250, 252, 0.98);
+            background: rgba(248, 250, 252, 0.75);
             border-left: 1px solid rgba(0, 0, 0, 0.1);
         }
 
@@ -133,8 +133,9 @@
         }
 
         body.light-theme .lang-dropdown {
-            background: rgba(248, 250, 252, 0.95);
+            background: rgba(248, 250, 252, 0.75);
             border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
         body.light-theme .lang-dropdown a {
@@ -180,10 +181,10 @@
         #ultra .btn-torrent { color: #a855f7 !important; }
         #flux .btn-torrent { color: #34d399 !important; }
 
-        #standard .btn-torrent:hover { background: #22d3ee !important; box-shadow: 0 0 20px rgba(34, 211, 238, 0.4) !important; color: white !important; }
-        #toolbox .btn-torrent:hover { background: #fbbf24 !important; box-shadow: 0 0 20px rgba(251, 191, 36, 0.4) !important; color: white !important; }
-        #ultra .btn-torrent:hover { background: #a855f7 !important; box-shadow: 0 0 20px rgba(168, 85, 247, 0.4) !important; color: white !important; }
-        #flux .btn-torrent:hover { background: #34d399 !important; box-shadow: 0 0 20px rgba(52, 211, 153, 0.4) !important; color: white !important; }
+        #standard .btn-torrent:hover, #standard .torrent-dropdown:hover .btn-torrent { background: #22d3ee !important; box-shadow: 0 0 20px rgba(34, 211, 238, 0.4) !important; color: white !important; transform: rotate(10deg); }
+        #toolbox .btn-torrent:hover, #toolbox .torrent-dropdown:hover .btn-torrent { background: #fbbf24 !important; box-shadow: 0 0 20px rgba(251, 191, 36, 0.4) !important; color: white !important; transform: rotate(10deg); }
+        #ultra .btn-torrent:hover, #ultra .torrent-dropdown:hover .btn-torrent { background: #a855f7 !important; box-shadow: 0 0 20px rgba(168, 85, 247, 0.4) !important; color: white !important; transform: rotate(10deg); }
+        #flux .btn-torrent:hover, #flux .torrent-dropdown:hover .btn-torrent { background: #34d399 !important; box-shadow: 0 0 20px rgba(52, 211, 153, 0.4) !important; color: white !important; transform: rotate(10deg); }
 
         /* Static colors for spec icons */
         #standard .spec-icon { color: var(--text-muted) !important; }
@@ -302,6 +303,9 @@
             color: var(--text-muted) !important;
             font-weight: 500;
             font-size: 0.9rem;
+            min-width: 90px;
+            justify-content: center;
+            white-space: nowrap;
         }
         .lang-btn:hover { background: rgba(255,255,255,0.1); }
         body:not(.light-theme) .lang-btn:hover { color: white !important; border-color: rgba(255,255,255,0.2); }
@@ -311,7 +315,9 @@
             position: absolute;
             top: calc(100% + 10px);
             right: 0;
-            background: rgba(15, 17, 21, 0.95);
+            background: rgba(15, 17, 21, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 8px;
@@ -320,14 +326,13 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             z-index: 10001;
-            filter: blur(0px);
             display: flex;
             flex-direction: column;
         }
         .lang-dropdown .lang-list {
-            max-height: 300px;
+            max-height: 600px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -746,11 +751,13 @@
         .mobile-lang-menu {
             position: fixed;
             top: 0;
+            bottom: 0;
             right: -100%;
             width: 280px;
-            height: 100vh;
-            background: rgba(15, 17, 21, 0.98);
+            height: 100dvh;
+            background: rgba(15, 17, 21, 0.8);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-left: 1px solid var(--glass-border);
             padding: 80px 30px 30px;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -786,7 +793,6 @@
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
             opacity: 0;
             visibility: hidden;
             transition: 0.3s;
@@ -941,6 +947,46 @@
             main { padding: 80px 20px 40px; display: block; }
             .download-card { padding: 20px; border-radius: 16px; margin-top: 20px; }
             .support-section .btn-group { grid-template-columns: 1fr; gap: 10px; }
+
+            /* Mobile Torrent Menu */
+            .download-card { overflow: visible !important; }
+            .buttons-wrapper {
+                position: relative !important;
+                overflow: visible !important;
+                width: 100% !important;
+                justify-content: center !important;
+                display: flex !important;
+            }
+            .tab-content { position: static !important; }
+            .torrent-dropdown { position: static !important; }
+
+            .torrent-menu {
+                position: absolute !important;
+                top: auto !important;
+                bottom: 100% !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                width: calc(100vw - 20px) !important;
+                max-width: 500px !important;
+                min-width: 0 !important;
+                margin: 0 0 15px 0 !important;
+                z-index: 100 !important;
+            }
+
+            .torrent-dropdown:hover .torrent-menu,
+            .torrent-dropdown.active .torrent-menu {
+                transform: translateX(-50%) !important;
+            }
+            
+            .torrent-dropdown:hover .btn-torrent,
+            .torrent-dropdown.active .btn-torrent {
+                color: var(--accent);
+                background: rgba(255, 152, 0, 0.1);
+                border-color: var(--accent);
+            }
+
+            .t-desktop { display: none !important; }
+            .t-mobile { display: flex !important; }
         }
         /* Footer */
         .site-footer {
@@ -1091,7 +1137,7 @@ html.light-theme .download-card, body.light-theme .download-card { background: r
 }
 
 @keyframes fadeInUp {
-    to { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; transform: none; }
 }
 
 .anim-enter {
@@ -1116,3 +1162,148 @@ html.light-theme .download-card, body.light-theme .download-card { background: r
     transform: scale(0.98);
     transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Torrent Dropdown */
+.torrent-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.torrent-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(15, 17, 21, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 8px;
+    min-width: 400px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    z-index: 100;
+    margin-bottom: 15px;
+}
+
+.torrent-dropdown:hover .torrent-menu,
+.torrent-dropdown.active .torrent-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.torrent-menu a {
+    display: block;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: 0.2s;
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+}
+
+.torrent-menu a:last-child {
+    margin-bottom: 0;
+}
+
+.torrent-menu a:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--glass-border);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.torrent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.t-name {
+    font-weight: 700;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.t-size {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* New Grid Layout for Details */
+.t-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.t-mobile { display: none; }
+
+.t-group {
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+.t-simple-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.t-group-header {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+    opacity: 0.9;
+}
+
+.t-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    font-size: 0.8rem;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    line-height: 1.4;
+}
+.t-item:last-child { border-bottom: none; }
+
+.t-ver { color: var(--text-muted); font-weight: 500; white-space: nowrap; }
+.t-desc { text-align: right; color: rgba(255,255,255,0.85); }
+
+/* Light theme support */
+html.light-theme .torrent-menu, body.light-theme .torrent-menu {
+    background: rgba(248, 250, 252, 0.75);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+html.light-theme .torrent-menu a:hover, body.light-theme .torrent-menu a:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0,0,0,0.1);
+}
+html.light-theme .t-name { color: #0f1115; }
+html.light-theme .t-size { background: rgba(0, 0, 0, 0.05); border-color: rgba(0,0,0,0.05); }
+html.light-theme .torrent-header { border-bottom-color: rgba(0,0,0,0.08); }
+html.light-theme .t-group { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.05); }
+html.light-theme .t-item { border-bottom-color: rgba(0,0,0,0.05); }
+html.light-theme .t-desc { color: rgba(0,0,0,0.8); }
