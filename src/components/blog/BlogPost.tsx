@@ -28,16 +28,16 @@ const MermaidDiagram: React.FC<{ chart: string }> = ({ chart }) => {
 
     const renderDiagram = async () => {
       if (!chart) return;
-      
+
       try {
         setLoading(true);
         setError(null);
-        
+
         // Dynamically import mermaid only when needed
         const mermaid = (await import('mermaid')).default;
-        
+
         if (cancelled) return;
-        
+
         // Initialize with dark theme
         mermaid.initialize({
           startOnLoad: false,
@@ -53,19 +53,19 @@ const MermaidDiagram: React.FC<{ chart: string }> = ({ chart }) => {
             fontSize: '16px',
           },
         });
-        
+
         // Wait for ref to be available
         if (!containerRef.current) {
           // Retry after a short delay if ref not ready
           await new Promise(resolve => setTimeout(resolve, 50));
           if (cancelled || !containerRef.current) return;
         }
-        
+
         containerRef.current.innerHTML = '';
         const { svg } = await mermaid.render(mermaidId, chart);
-        
+
         if (cancelled) return;
-        
+
         if (containerRef.current) {
           containerRef.current.innerHTML = svg;
         }
@@ -77,9 +77,9 @@ const MermaidDiagram: React.FC<{ chart: string }> = ({ chart }) => {
         setLoading(false);
       }
     };
-    
+
     renderDiagram();
-    
+
     return () => {
       cancelled = true;
     };
@@ -122,8 +122,8 @@ const CodeBlock: React.FC<{ language: string; code: string }> = ({ language, cod
     <div className="code-block">
       <div className="code-block-header">
         {language && <span className="code-block-lang">{language}</span>}
-        <button 
-          onClick={handleCopy} 
+        <button
+          onClick={handleCopy}
           className="code-block-copy"
           title={copied ? 'Copied!' : 'Copy code'}
         >
@@ -167,7 +167,7 @@ export const BlogPost: React.FC = () => {
         tags: post.tags,
       });
     }
-    
+
     // Reset to default meta tags when component unmounts
     return () => {
       resetMetaTags();
@@ -176,17 +176,8 @@ export const BlogPost: React.FC = () => {
 
   // Force scroll to top on mount
   useEffect(() => {
-    // Add class to body to disable scroll-snap
-    document.body.classList.add('blog-page');
-    document.documentElement.classList.add('blog-page');
-    
     // Instant scroll to top (bypass smooth scroll)
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    
-    return () => {
-      document.body.classList.remove('blog-page');
-      document.documentElement.classList.remove('blog-page');
-    };
   }, []);
 
   const formatDate = (dateString: string) => {
@@ -232,7 +223,7 @@ export const BlogPost: React.FC = () => {
   }
 
   return (
-    <motion.article 
+    <motion.article
       className="blog-post"
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -248,13 +239,13 @@ export const BlogPost: React.FC = () => {
         {/* Header */}
         <header className="blog-post-header">
           <h1 className="blog-post-title">{post.title}</h1>
-          
+
           <div className="blog-post-meta">
             <span className="blog-post-date">
               <Calendar size={16} />
               {formatDate(post.publishedAt)}
             </span>
-            
+
             {post.author && (
               <span className="blog-post-author">
                 <User size={16} />
@@ -293,12 +284,12 @@ export const BlogPost: React.FC = () => {
                 const language = match ? match[1] : '';
                 const inline = props.inline;
                 const codeString = String(children).replace(/\n$/, '');
-                
+
                 // Handle Mermaid diagrams
                 if (language === 'mermaid') {
                   return <MermaidDiagram chart={codeString} />;
                 }
-                
+
                 return !inline && match ? (
                   <CodeBlock language={language} code={codeString} />
                 ) : (

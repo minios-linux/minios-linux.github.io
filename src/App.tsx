@@ -19,6 +19,7 @@ const BlogList = lazy(() => import('./components/blog/BlogList').then(m => ({ de
 const BlogPost = lazy(() => import('./components/blog/BlogPost').then(m => ({ default: m.BlogPost })));
 const AdminPanel = lazy(() => import('./components/admin/AdminPanel').then(m => ({ default: m.AdminPanel })));
 const TestPage = lazy(() => import('./test-page').then(m => ({ default: m.TestPage })));
+const NotFound = lazy(() => import('./components/NotFound'));
 import { AdminPanelSkeleton } from './components/admin/AdminPanelSkeleton';
 
 // Loading fallback component - must reserve enough height to prevent footer from jumping
@@ -41,12 +42,12 @@ function LandingPage() {
   // Track active section based on scroll position
   useEffect(() => {
     const sections = ['home', 'features', 'download'];
-    
+
     const updateActiveSection = () => {
       const viewportCenter = window.innerHeight / 2;
       let closestSection = 'home';
       let closestDistance = Infinity;
-      
+
       sections.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -54,20 +55,20 @@ function LandingPage() {
           // Calculate distance from section center to viewport center
           const sectionCenter = rect.top + rect.height / 2;
           const distance = Math.abs(sectionCenter - viewportCenter);
-          
+
           if (distance < closestDistance) {
             closestDistance = distance;
             closestSection = id;
           }
         }
       });
-      
+
       setActiveSection(closestSection);
     };
 
     // Initial check after render
     const timeoutId = setTimeout(updateActiveSection, 100);
-    
+
     // Listen to scroll events
     window.addEventListener('scroll', updateActiveSection, { passive: true });
 
@@ -180,7 +181,7 @@ function AppContent() {
           <AdminPanel onClose={() => setShowAdmin(false)} />
         </Suspense>
       )}
-      
+
       {!showAdmin && (
         <Layout onShowLanding={() => navigate('/')}>
           <AnimatePresence mode="wait">
@@ -197,14 +198,19 @@ function AppContent() {
                   <BlogPost />
                 </Suspense>
               } />
+              <Route path="*" element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <NotFound />
+                </Suspense>
+              } />
             </Routes>
           </AnimatePresence>
         </Layout>
       )}
-      
+
       {/* Admin Toggle - only visible on localhost */}
       {isLocalhost && (
-        <button 
+        <button
           className="admin-toggle-btn"
           onClick={() => setShowAdmin(!showAdmin)}
           title={showAdmin ? 'Back to site' : 'Admin Panel (localhost only)'}

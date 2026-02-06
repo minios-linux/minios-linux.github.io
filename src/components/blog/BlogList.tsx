@@ -24,7 +24,7 @@ export const BlogList: React.FC = () => {
   };
 
   // Use first selected tag for API filter (or undefined for all)
-  const { posts, loading, hasMore, loadMore } = useBlogPosts({ 
+  const { posts, loading, hasMore, loadMore } = useBlogPosts({
     tag: selectedTags.length === 1 ? selectedTags[0] : undefined,
     pageSize: blogSettings.postsPerPage
   });
@@ -33,22 +33,22 @@ export const BlogList: React.FC = () => {
   // Filter posts by search query and multiple tags
   const filteredPosts = posts.filter(post => {
     // Filter by search
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
+
     // Filter by selected tags (post must have ALL selected tags)
-    const matchesTags = selectedTags.length === 0 || 
+    const matchesTags = selectedTags.length === 0 ||
       selectedTags.every(selectedTag => post.tags?.includes(selectedTag));
-    
+
     return matchesSearch && matchesTags;
   });
 
   // Toggle tag selection
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
+    setSelectedTags(prev =>
+      prev.includes(tag)
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
     );
@@ -97,25 +97,16 @@ export const BlogList: React.FC = () => {
 
   // Force scroll to top on mount and reset meta tags
   useEffect(() => {
-    // Add class to body to disable scroll-snap
-    document.body.classList.add('blog-page');
-    document.documentElement.classList.add('blog-page');
-    
     // Instant scroll to top (bypass smooth scroll)
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    
+
     // Reset meta tags to default (blog list doesn't need custom OG tags)
     resetMetaTags();
-    
-    return () => {
-      document.body.classList.remove('blog-page');
-      document.documentElement.classList.remove('blog-page');
-    };
   }, []);
 
   // Show minimal loading indicator while fetching
   const isLoading = (loading || tagsLoading) && posts.length === 0;
-  
+
   // Add/remove loading class on body for header logo animation
   useEffect(() => {
     if (isLoading) {
@@ -138,7 +129,7 @@ export const BlogList: React.FC = () => {
   }
 
   return (
-    <motion.div 
+    <motion.div
       className="blog-container"
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -160,7 +151,7 @@ export const BlogList: React.FC = () => {
                 className="blog-search-input"
               />
               {searchQuery && (
-                <button 
+                <button
                   className="blog-search-clear"
                   onClick={() => setSearchQuery('')}
                   title={t('Clear search')}
@@ -173,21 +164,21 @@ export const BlogList: React.FC = () => {
             {/* Tag Selector Dropdown */}
             {tags.length > 0 && (
               <div className="blog-tag-selector" ref={tagDropdownRef}>
-                <button 
+                <button
                   className={`blog-tag-trigger ${tagDropdownOpen ? 'open' : ''} ${selectedTags.length > 0 ? 'has-value' : ''}`}
                   onClick={() => setTagDropdownOpen(!tagDropdownOpen)}
                 >
                   <Tag size={16} />
                   <span>
-                    {selectedTags.length === 0 
-                      ? t('All tags') 
-                      : selectedTags.length === 1 
+                    {selectedTags.length === 0
+                      ? t('All tags')
+                      : selectedTags.length === 1
                         ? selectedTags[0]
                         : `${selectedTags.length} ${t('tags')}`}
                   </span>
                   <ChevronDown size={16} className={`blog-tag-chevron ${tagDropdownOpen ? 'open' : ''}`} />
                 </button>
-                
+
                 {tagDropdownOpen && (
                   <div className="blog-tag-dropdown">
                     {selectedTags.length > 0 && (
