@@ -15,18 +15,19 @@ export interface LanguageMeta {
 
 // Fetch available languages with metadata dynamically
 // In dev: /api/languages (Vite plugin scans folder and reads _meta from files)
-// In prod: /translations/languages.json (generated at build time with metadata)
+// In prod: /translations/languages.json (generated at build time)
 async function fetchLanguagesWithMeta(): Promise<LanguageMeta[]> {
-  try {
-    // Try API first (dev mode)
-    const response = await fetch('/api/languages');
-    if (response.ok) {
-      return await response.json();
+  if (import.meta.env.DEV) {
+    try {
+      const response = await fetch('/api/languages');
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch {
+      // API not available
     }
-  } catch {
-    // API not available, try static file (production)
   }
-  
+
   try {
     const response = await fetch(`${getBaseUrl()}translations/languages.json`);
     if (response.ok) {
@@ -35,7 +36,7 @@ async function fetchLanguagesWithMeta(): Promise<LanguageMeta[]> {
   } catch {
     // Fallback to English only
   }
-  
+
   return [{ code: 'en', name: 'English', flag: '🇺🇸' }];
 }
 
@@ -50,7 +51,7 @@ export function getAvailableLanguages(): LanguageMeta[] {
 export async function initI18n(): Promise<typeof i18n> {
   languagesCache = await fetchLanguagesWithMeta();
   const supportedLngs = languagesCache.map(l => l.code);
-  
+
   await i18n
     .use(HttpBackend)
     .use(LanguageDetector)
@@ -58,13 +59,13 @@ export async function initI18n(): Promise<typeof i18n> {
     .init({
       fallbackLng: 'en',
       supportedLngs,
-      
+
       detection: {
         order: ['querystring', 'navigator', 'htmlTag'],
         lookupQuerystring: 'lang',
         caches: ['localStorage'],
       },
-      
+
       backend: {
         loadPath: `${getBaseUrl()}translations/{{lng}}.json`,
         parse: (data: string) => {
@@ -81,16 +82,16 @@ export async function initI18n(): Promise<typeof i18n> {
           return filtered;
         },
       },
-      
+
       interpolation: {
         escapeValue: false,
       },
-      
+
       react: {
         useSuspense: true,
       },
     });
-  
+
   return i18n;
 }
 
