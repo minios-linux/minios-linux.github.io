@@ -12,14 +12,16 @@ excerpt: >-
   detailed articles covering virtually every technical aspect of working with
   the system.
 author: MiniOS Team
-publishedAt: '2026-02-06T13:54:00.000Z'
-updatedAt: '2026-02-06T16:54:49.993Z'
+publishedAt: '2026-02-06T10:54:00.000Z'
+updatedAt: '2026-02-06T17:44:59.715Z'
 tags:
   - news
   - minios
   - blog
   - announcement
 published: true
+telegramPostId: 406
+telegramDiscussion: 'https://t.me/minios_news/406'
 ---
 Hello, friends!
 
