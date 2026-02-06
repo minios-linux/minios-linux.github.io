@@ -716,7 +716,6 @@ html.light-theme .btn-torrent {
 
 html {
     scroll-behavior: smooth;
-    scroll-snap-type: y proximity;
     background-color: var(--bg-dark);
     height: 100%;
 }
@@ -726,7 +725,6 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    scroll-snap-align: start;
     scroll-margin-top: 80px;
     padding-top: 80px;
     padding-bottom: 20px;
@@ -1415,15 +1413,6 @@ h1 {
         min-height: auto;
         padding: 60px 0;
     }
-
-    /* Tablet: Disable scroll-snap */
-    html {
-        scroll-snap-type: none;
-    }
-
-    section {
-        scroll-snap-align: none;
-    }
 }
 
 /* Mobile Fallback */
@@ -1580,7 +1569,7 @@ h1 {
     flex-direction: column;
 }
 
-.tab-content > *:last-child {
+.tab-content>*:last-child {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -2285,10 +2274,6 @@ html.light-theme .slideshow-indicators .indicator.active {
 
 /* Mobile */
 @media (max-width: 900px) {
-    html {
-        scroll-snap-type: none;
-    }
-
     .grid-3 {
         grid-template-columns: 1fr;
     }
@@ -2523,7 +2508,6 @@ html.light-theme .slideshow-indicators .indicator.active {
 
 /* Footer */
 .site-footer {
-    scroll-snap-align: start;
     padding: 60px 0 40px;
     background: rgba(15, 17, 21, 0.5);
     border-top: 1px solid var(--glass-border);
@@ -2657,6 +2641,18 @@ main .container {
     height: 100%;
     background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.08), transparent 60%);
     pointer-events: none;
+}
+
+/* 404 page */
+.not-found-code {
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent), rgba(56, 189, 248, 0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
 }
 
 /* Success header */
@@ -2818,20 +2814,20 @@ html.light-theme .help-link:hover {
     .download-card {
         padding: 32px 24px;
     }
-    
+
     .download-success h1 {
         font-size: 1.4rem;
     }
-    
+
     .help-card {
         flex-wrap: wrap;
         gap: 12px;
     }
-    
+
     .help-content {
         flex: 1 1 calc(100% - 64px);
     }
-    
+
     .help-link {
         width: 100%;
         justify-content: center;
@@ -3243,28 +3239,29 @@ html.light-theme .admin-close-btn:hover svg {
    ADMIN PANEL - SKELETON LOADING
    ========================================= */
 @keyframes skeleton-shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
 }
 
 .skeleton-box {
-    background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.03) 0%,
-        rgba(255, 255, 255, 0.08) 50%,
-        rgba(255, 255, 255, 0.03) 100%
-    );
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.03) 0%,
+            rgba(255, 255, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.03) 100%);
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.5s ease-in-out infinite;
 }
 
 html.light-theme .skeleton-box {
-    background: linear-gradient(
-        90deg,
-        rgba(0, 0, 0, 0.04) 0%,
-        rgba(0, 0, 0, 0.08) 50%,
-        rgba(0, 0, 0, 0.04) 100%
-    );
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.04) 0%,
+            rgba(0, 0, 0, 0.08) 50%,
+            rgba(0, 0, 0, 0.04) 100%);
     background-size: 200% 100%;
 }
 
@@ -4569,7 +4566,7 @@ html.light-theme .admin-preview-card {
 
 /* Hide dialog header in preview mode */
 .blog-editor-dialog.blog-preview-mode [data-slot="dialog-header"],
-.blog-editor-dialog.blog-preview-mode > .flex.flex-col.gap-2 {
+.blog-editor-dialog.blog-preview-mode>.flex.flex-col.gap-2 {
     display: none !important;
 }
 
@@ -8962,6 +8959,7 @@ html.light-theme .torrent-group {
         width: 100%;
     }
 }
+
 /* =========================================
    IMAGE UPLOAD DIALOG
    ========================================= */
@@ -9495,8 +9493,13 @@ button .image-upload-gallery-badge {
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Gallery item delete button */
