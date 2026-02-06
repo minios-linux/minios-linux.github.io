@@ -583,6 +583,19 @@ function getAllBlogPosts(includeContent = false, lang?: string): Omit<BlogPost, 
 
     const post = parseBlogPost(filePath, slug);
     if (post) {
+      // Inherit telegramDiscussion/telegramPostId from original if missing in translation
+      if (lang && lang !== 'en' && (!post.telegramDiscussion || !post.telegramPostId)) {
+        const originalPath = path.resolve(postsDir, file);
+        const originalPost = parseBlogPost(originalPath, slug);
+        if (originalPost) {
+          if (!post.telegramDiscussion && originalPost.telegramDiscussion) {
+            post.telegramDiscussion = originalPost.telegramDiscussion;
+          }
+          if (!post.telegramPostId && originalPost.telegramPostId) {
+            post.telegramPostId = originalPost.telegramPostId;
+          }
+        }
+      }
       if (includeContent) {
         posts.push(post);
       } else {
@@ -1891,6 +1904,20 @@ function localDataPlugin() {
             if (!post) {
               sendJson(res, 404, { error: 'Post not found' });
               return;
+            }
+
+            // Inherit telegramDiscussion/telegramPostId from original if missing in translation
+            if (lang !== 'en') {
+              const originalPath = path.resolve(postsDir, `${slug}.md`);
+              const originalPost = parseBlogPost(originalPath, slug);
+              if (originalPost) {
+                if (!post.telegramDiscussion && originalPost.telegramDiscussion) {
+                  post.telegramDiscussion = originalPost.telegramDiscussion;
+                }
+                if (!post.telegramPostId && originalPost.telegramPostId) {
+                  post.telegramPostId = originalPost.telegramPostId;
+                }
+              }
             }
 
             // Get available translations
