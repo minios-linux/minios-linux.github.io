@@ -1,36 +1,44 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/assets/svg/minios_icon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MiniOS - Fast. Simple. Reliable.</title>
-    <script>
-      // SPA redirect for GitHub Pages
-      // This script handles direct navigation to routes in a single-page application
-      // by redirecting to index.html while preserving the path in sessionStorage
-      (function() {
-        var path = window.location.pathname;
-        var search = window.location.search;
-        var hash = window.location.hash;
-        
-        // Skip if already at root
-        if (path === '/' || path === '/index.html') {
-          return;
-        }
-        
-        // Store the path for the SPA to handle
-        sessionStorage.setItem('spa-redirect-path', path + search + hash);
-        
-        // Redirect to root
-        window.location.replace('/');
-      })();
-    </script>
-  </head>
-  <body>
-    <noscript>
-      <p>This site requires JavaScript to function properly.</p>
-      <p><a href="/">Go to homepage</a></p>
-    </noscript>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/assets/svg/minios_icon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiniOS - Fast. Simple. Reliable.</title>
+  <script>
+    // SPA redirect for GitHub Pages
+    // This script handles direct navigation to routes in a single-page application
+    // by redirecting to index.html while preserving the path in sessionStorage
+    (function () {
+      var path = window.location.pathname;
+      var search = window.location.search;
+      var hash = window.location.hash;
+
+      // Skip if already at root
+      if (path === '/' || path === '/index.html') {
+        return;
+      }
+
+      // Skip /docs paths — served by a separate GitHub Pages project site
+      if (path === '/docs' || path.indexOf('/docs/') === 0) {
+        return;
+      }
+
+      // Store the path for the SPA to handle
+      sessionStorage.setItem('spa-redirect-path', path + search + hash);
+
+      // Redirect to root
+      window.location.replace('/');
+    })();
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <p>This site requires JavaScript to function properly.</p>
+    <p><a href="/">Go to homepage</a></p>
+  </noscript>
+</body>
+
 </html>

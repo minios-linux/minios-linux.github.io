@@ -35,35 +35,35 @@ export const TelegramComments: React.FC<TelegramCommentsProps> = ({
   const { theme } = useTheme();
   const { t } = useTranslation();
   const [error, setError] = useState<string | null>(null);
-  
+
   // Normalize URL: remove https://t.me/ prefix if present
-  const normalizedUrl = useMemo(() => 
+  const normalizedUrl = useMemo(() =>
     discussionUrl.replace(/^https?:\/\/t\.me\//, ''),
     [discussionUrl]
   );
-  
+
   // Determine initial loading state based on whether we have a URL
   const [loading, setLoading] = useState(!!normalizedUrl);
-  
+
   useEffect(() => {
     // Capture current ref value for cleanup
     const container = containerRef.current;
-    
+
     if (!normalizedUrl || !container) {
       return;
     }
-    
+
     // Clear previous widget
     container.innerHTML = '';
-    
+
     // Create script element for Telegram widget
     const script = document.createElement('script');
     script.src = 'https://telegram.org/js/telegram-widget.js?22';
     script.async = true;
-    
+
     // Set data attributes
     script.setAttribute('data-telegram-discussion', normalizedUrl);
-    
+
     // Theme-aware colors matching site design
     // Note: Telegram widget has limited customization options
     if (theme === 'dark') {
@@ -74,53 +74,53 @@ export const TelegramComments: React.FC<TelegramCommentsProps> = ({
       // Light theme - slightly darker cyan for better contrast
       script.setAttribute('data-color', '0891B2'); // cyan-600
     }
-    
+
     // Different colors for usernames
     script.setAttribute('data-colorful', '1');
-    
+
     // Optional: limit comments
     if (commentsLimit && commentsLimit > 0) {
       script.setAttribute('data-comments-limit', String(commentsLimit));
     }
-    
+
     // Optional: fixed height
     if (height && height > 0) {
       script.setAttribute('data-height', String(height));
     }
-    
+
     // Handle load events
     script.onload = () => {
       setLoading(false);
     };
-    
+
     script.onerror = () => {
       setError(t('Failed to load Telegram comments widget'));
       setLoading(false);
     };
-    
+
     container.appendChild(script);
-    
+
     // Give the widget some time to render
     const timeout = setTimeout(() => {
       setLoading(false);
     }, 3000);
-    
+
     return () => {
       clearTimeout(timeout);
       container.innerHTML = '';
     };
   }, [normalizedUrl, theme, commentsLimit, height, t]);
-  
+
   // Build full Telegram URL for "View on Telegram" link
-  const fullTelegramUrl = discussionUrl.startsWith('http') 
-    ? discussionUrl 
+  const fullTelegramUrl = discussionUrl.startsWith('http')
+    ? discussionUrl
     : `https://t.me/${normalizedUrl}`;
-  
+
   // Early return if no URL provided
   if (!normalizedUrl) {
     return null;
   }
-  
+
   return (
     <section className="telegram-comments">
       <div className="telegram-comments-header">
@@ -128,7 +128,7 @@ export const TelegramComments: React.FC<TelegramCommentsProps> = ({
           <MessageCircle className="w-5 h-5" />
           {t('Comments')}
         </h3>
-        <a 
+        <a
           href={fullTelegramUrl}
           target="_blank"
           rel="noopener noreferrer"
@@ -138,11 +138,11 @@ export const TelegramComments: React.FC<TelegramCommentsProps> = ({
           <ExternalLink className="w-4 h-4" />
         </a>
       </div>
-      
+
       {error && (
         <div className="telegram-comments-error">
           <p>{error}</p>
-          <a 
+          <a
             href={fullTelegramUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -153,12 +153,12 @@ export const TelegramComments: React.FC<TelegramCommentsProps> = ({
           </a>
         </div>
       )}
-      
-      <div 
-        ref={containerRef} 
+
+      <div
+        ref={containerRef}
         className={`telegram-comments-widget ${loading ? 'loading' : ''}`}
       />
-      
+
       {loading && (
         <div className="telegram-comments-loading">
           <div className="telegram-comments-spinner" />
