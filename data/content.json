@@ -1,0 +1,492 @@
+{
+  "site": {
+    "title": "MiniOS - Fast. Simple. Reliable.",
+    "description": "Lightweight, portable, and modular Linux distribution based on Debian.",
+    "favicon": "/assets/svg/minios_icon.svg",
+    "logo": "/assets/svg/minios_icon.svg",
+    "logoText": "MiniOS",
+    "copyright": "2020-2026 MiniOS Linux",
+    "heroBadge": "Latest Release: 5.1.1"
+  },
+  "seo": {
+    "title": "MiniOS - Fast. Simple. Reliable.",
+    "description": "MiniOS is a lightweight, fast, and reliable Linux distribution. Perfect for old computers, USB drives, and everyday use.",
+    "keywords": "MiniOS, Linux, lightweight, fast, reliable, USB, live system, portable OS, Debian, distribution",
+    "author": "MiniOS Team",
+    "canonicalUrl": "https://minios.dev",
+    "ogImage": "/assets/img/og-image.png",
+    "ogSiteName": "MiniOS",
+    "twitterCard": "summary_large_image",
+    "yandexVerification": "112ea334e65fa41b",
+    "yandexMetrikaId": "91951521",
+    "googleAnalyticsId": "G-DW6V3D3DVZ",
+    "structuredData": {
+      "softwareVersion": "4.0",
+      "ratingValue": "4.8",
+      "ratingCount": "150"
+    },
+    "sitemap": {
+      "includeExternalLinks": true,
+      "externalLinks": [
+        "https://minios.dev/docs",
+        "https://t.me/s/minios_news",
+        "https://github.com/minios-linux/minios-live",
+        "https://github.com/minios-linux/minios-live/wiki"
+      ]
+    }
+  },
+  "aiTranslation": {
+    "prompt": "You are a professional translator specializing in software and product localization. You are translating UI strings, website content, and marketing materials for MiniOS Linux distribution.\n\nCONTEXT AWARENESS:\n- This is a Linux distribution with multiple \"editions\" (variants): Standard, Flux, Toolbox, Ultra\n- The audience is technical users who download and use Linux distributions\n- Tone: professional yet approachable, clear and concise\n- Use IT/software terminology that is standard in {{targetLang}} tech community\n\nIMPORTANT TRANSLATION PRINCIPLES:\n- Translate for NATURALNESS and FLUENCY in the target language, not word-for-word\n- Use idiomatic expressions natural to {{targetLang}}, not literal translations\n- Adapt sentence structure to match {{targetLang}} conventions\n- Use established IT terminology in {{targetLang}} (e.g., \"edition\" in software context, not literary terms)\n- Consider cultural context and target audience expectations\n- Maintain the original tone and intent, but express it naturally in {{targetLang}}\n\nTECHNICAL REQUIREMENTS:\n- Keep the JSON structure and keys exactly the same. Only translate the values.\n- Preserve any HTML tags and attributes unchanged (e.g., <a href=\"...\">link</a>, <strong>, <p>, etc.)\n- Preserve any Markdown formatting unchanged (e.g., **bold**, *italic*, [links](...), # headers, - lists, etc.)\n- Keep brand names unchanged (MiniOS, Debian, Ubuntu, Linux, XFCE, Fluxbox, SquashFS, Flux, Standard, Toolbox, Ultra, etc.)\n- Keep language names in their native form (e.g., 'Deutsch' not 'German', 'Русский' not 'Russian')\n- For short taglines with periods like \"Fast. Simple. Reliable.\" - translate each word as-is without declensions or articles, keeping the same concise format\n- Return ONLY the JSON object, no explanations or markdown code blocks.\n\nTERMINOLOGY EXAMPLES:\n❌ \"edition\" → \"выпуск\" or \"редакция\" (wrong context - these are for publications/releases)\n✅ \"edition\" → \"издание\" (correct - standard IT term like \"Windows Home Edition\")\n\n❌ \"landing page\" → \"посадочная страница\" or \"целевая страница\" (literal, awkward)\n✅ \"landing page\" → \"страница\" or context-appropriate term (natural, concise)\n\n❌ \"Fast. Simple. Reliable.\" → \"Быстрый. Простой. Надёжный.\" (uses adjectives with declensions)\n✅ \"Fast. Simple. Reliable.\" → \"Быстро. Просто. Надёжно.\" (uses adverbs, matching the concise style)\n\n❌ \"CPU\" → \"центральный процессор\" or \"процессор\" (wrong context - abbreviation translated as a word)\n✅ \"CPU\" → \"ЦП\" (correct - abbreviation translated as abbreviation)\n\nFocus on how a native {{targetLang}} speaker in the tech community would naturally express these ideas."
+  },
+  "homePage": {
+    "announcement": "We've launched a blog! You can access it by clicking the button in the header or [here](/blog).",
+    "hero": {
+      "prefix": "MiniOS is",
+      "tagline": "Engineered for speed, designed for you.",
+      "primaryButton": "Get MiniOS",
+      "secondaryButton": "Why MiniOS?"
+    },
+    "features": {
+      "sectionTitle": "Why MiniOS?",
+      "sectionSubtitle": "Engineered for speed, designed for you."
+    },
+    "announcementColor": "cyan",
+    "announcementAlign": "center"
+  },
+  "blog": {
+    "columns": {
+      "desktop": 2,
+      "tablet": 2,
+      "mobile": 1
+    },
+    "postsPerPage": 6
+  },
+  "downloadPage": {
+    "version": "5.1.1",
+    "releaseVersion": "v5.1.1",
+    "downloadUrlTemplate": "https://github.com/minios-linux/minios-live/releases/download/{release}/minios-trixie-xfce-{name_lower}-amd64-{version}.iso",
+    "companion": {
+      "title": "",
+      "description": "",
+      "button": "",
+      "url": ""
+    }
+  },
+  "torrents": [
+    {
+      "id": "current",
+      "title": "MiniOS",
+      "size": "3.9 GB",
+      "groups": [
+        {
+          "header": "Debian 13 (Trixie)",
+          "items": [
+            {
+              "label": "Editions",
+              "value": "Standard, Toolbox, Ultra"
+            },
+            {
+              "label": "Arch",
+              "value": "x64"
+            }
+          ],
+          "mobileDescription": "Standard, Toolbox, Ultra. x64 only."
+        }
+      ],
+      "url": "https://github.com/minios-linux/minios-live/releases/download/v5.1.1/minios-5.1.1.torrent"
+    },
+    {
+      "id": "collection",
+      "title": "Complete Collection",
+      "size": "17.9 GB",
+      "groups": [
+        {
+          "header": "Debian",
+          "items": [
+            {
+              "label": "10, 11",
+              "value": "Standard, Flux (x86/x64)"
+            },
+            {
+              "label": "12",
+              "value": "Standard, Flux (x86/x64), Toolbox, Ultra (x64)"
+            },
+            {
+              "label": "13",
+              "value": "Standard, Toolbox, Ultra (x64)"
+            }
+          ],
+          "mobileDescription": "All editions included."
+        },
+        {
+          "header": "Ubuntu",
+          "items": [
+            {
+              "label": "18.04",
+              "value": "Standard (x86/x64)"
+            },
+            {
+              "label": "20–24",
+              "value": "Standard (x64)"
+            }
+          ],
+          "mobileDescription": "Debian & Ubuntu based."
+        }
+      ],
+      "url": "https://github.com/minios-linux/minios-live/releases/download/v5.1.1/minios-5.1-complete-collection.torrent"
+    }
+  ],
+  "thankYouPage": {
+    "support": {
+      "githubUrl": "https://github.com/minios-linux/minios-live",
+      "telegramUrl": "https://t.me/minios_chat",
+      "reviewUrl": "https://distrowatch.com/table.php?distribution=minios"
+    }
+  },
+  "footer": {
+    "description": "Fast. Simple. Reliable."
+  },
+  "navigation": {
+    "headerLinks": [
+      {
+        "id": "home",
+        "label": "Home",
+        "url": "/",
+        "icon": "Home",
+        "type": "internal",
+        "enabled": true
+      },
+      {
+        "id": "blog",
+        "label": "Blog",
+        "url": "/blog",
+        "icon": "Newspaper",
+        "type": "internal",
+        "enabled": true
+      },
+      {
+        "id": "news",
+        "label": "News",
+        "url": "https://t.me/s/minios_news",
+        "icon": "Newspaper",
+        "type": "external",
+        "enabled": false
+      },
+      {
+        "id": "community",
+        "label": "Community",
+        "url": "https://t.me/minios_chat",
+        "icon": "MessageCircle",
+        "type": "external",
+        "enabled": true
+      },
+      {
+        "id": "docs",
+        "label": "Documentation",
+        "url": "https://minios.dev/docs",
+        "icon": "BookOpen",
+        "type": "external",
+        "enabled": true
+      },
+      {
+        "id": "github",
+        "label": "Source code",
+        "url": "https://github.com/minios-linux/minios-live",
+        "icon": "Github",
+        "type": "external",
+        "enabled": true
+      }
+    ],
+    "footerGroups": [
+      {
+        "id": "project",
+        "title": "Project",
+        "links": [
+          {
+            "id": "footer-home",
+            "label": "Home",
+            "url": "/",
+            "type": "internal",
+            "enabled": true
+          },
+          {
+            "id": "footer-blog",
+            "label": "Blog",
+            "url": "/blog",
+            "type": "internal",
+            "enabled": true,
+            "icon": ""
+          },
+          {
+            "id": "footer-docs",
+            "label": "Documentation",
+            "url": "https://minios.dev/docs",
+            "type": "external",
+            "enabled": true,
+            "external": true
+          },
+          {
+            "id": "footer-source",
+            "label": "Source code",
+            "url": "https://github.com/minios-linux/minios-live",
+            "type": "external",
+            "enabled": true,
+            "external": true
+          },
+          {
+            "id": "footer-releases",
+            "label": "Releases",
+            "url": "https://github.com/minios-linux/minios-live/releases",
+            "type": "external",
+            "enabled": true,
+            "external": true
+          }
+        ]
+      },
+      {
+        "id": "community",
+        "title": "Community",
+        "links": [
+          {
+            "id": "footer-telegram",
+            "label": "Telegram Chat",
+            "url": "https://t.me/minios_chat",
+            "type": "external",
+            "enabled": true,
+            "external": true
+          },
+          {
+            "id": "footer-news",
+            "label": "News Channel",
+            "url": "https://t.me/s/minios_news",
+            "type": "external",
+            "enabled": true,
+            "external": true
+          },
+          {
+            "id": "footer-distrowatch",
+            "label": "DistroWatch",
+            "url": "https://distrowatch.com/table.php?distribution=minios",
+            "type": "external",
+            "enabled": true,
+            "external": true
+          }
+        ]
+      }
+    ]
+  },
+  "editions": [
+    {
+      "id": "standard",
+      "name": "Standard",
+      "version": "",
+      "colorTheme": "#22d3ee",
+      "description": "Minimal system with basic functionality. Compact and efficient Xfce desktop for everyday computing.",
+      "heroDescription": "Minimal system with basic functionality. Compact and efficient Xfce desktop for everyday computing.",
+      "downloadUrl": "",
+      "size": "812 MB",
+      "ram": "768 MB",
+      "cpu": "1 GHz",
+      "requirements": "CPU x64",
+      "order": 0,
+      "features": [
+        "Desktop environment",
+        "Web browser",
+        "Graphics system",
+        "Networking tools",
+        "Disk management utilities",
+        "Compression utilities",
+        "System firmware packages"
+      ],
+      "includesLabel": "Includes:",
+      "galleryImages": [
+        "/assets/img/standard_00.jpg",
+        "/assets/img/standard_01.jpg",
+        "/assets/img/standard_02.jpg",
+        "/assets/img/standard_03.jpg",
+        "/assets/img/standard_04.jpg",
+        "/assets/img/standard_05.jpg"
+      ],
+      "heroImage": "/assets/img/standard_00.jpg",
+      "showGallery": true,
+      "showTorrent": true,
+      "showInHero": true,
+      "primaryButtonIcon": "Download"
+    },
+    {
+      "id": "toolbox",
+      "name": "Toolbox",
+      "version": "",
+      "colorTheme": "#f59e0b",
+      "description": "System administration and diagnostic tools. Everything you need for professional IT work and system recovery.",
+      "heroDescription": "System administration and diagnostic tools. Everything you need for professional IT work and system recovery.",
+      "downloadUrl": "",
+      "size": "1.16 GB",
+      "ram": "768 MB",
+      "cpu": "1 GHz",
+      "requirements": "CPU x64",
+      "order": 1,
+      "features": [
+        "Disk partitioning tools",
+        "System diagnostics",
+        "Data recovery utilities",
+        "Network analysis tools",
+        "Hardware testing",
+        "Backup solutions",
+        "Remote access tools"
+      ],
+      "includesLabel": "Includes Standard +:",
+      "galleryImages": [
+        "/assets/img/toolbox_00.jpg",
+        "/assets/img/toolbox_01.jpg",
+        "/assets/img/toolbox_02.jpg",
+        "/assets/img/toolbox_03.jpg"
+      ],
+      "heroImage": "/assets/img/toolbox_00.jpg"
+    },
+    {
+      "id": "ultra",
+      "name": "Ultra",
+      "version": "",
+      "colorTheme": "#a855f7",
+      "description": "A full-featured desktop environment with a wide range of applications. Professional tools for creativity and development.",
+      "heroDescription": "A full-featured desktop environment with a wide range of applications. Professional tools for creativity and development.",
+      "downloadUrl": "",
+      "size": "1.69 GB",
+      "ram": "768 MB",
+      "cpu": "1 GHz",
+      "requirements": "CPU x64",
+      "order": 2,
+      "features": [
+        "Full office suite",
+        "Graphics editors",
+        "Video production tools",
+        "Audio editor",
+        "3D modeling tools",
+        "Development IDE",
+        "Container platform"
+      ],
+      "includesLabel": "Includes Toolbox +:",
+      "galleryImages": [
+        "/assets/img/ultra_00.jpg",
+        "/assets/img/ultra_01.jpg",
+        "/assets/img/ultra_02.jpg",
+        "/assets/img/ultra_03.jpg",
+        "/assets/img/ultra_04.jpg",
+        "/assets/img/ultra_05.jpg",
+        "/assets/img/ultra_06.jpg"
+      ],
+      "heroImage": ""
+    },
+    {
+      "id": "flux",
+      "name": "Flux",
+      "version": "5.1.2",
+      "colorTheme": "#34d399",
+      "description": "Ultra-lightweight Fluxbox edition. Breathes new life into ancient hardware with minimal resource usage.",
+      "heroDescription": "Ultra-lightweight Fluxbox edition. Breathes new life into ancient hardware with minimal resource usage.",
+      "downloadUrl": "",
+      "size": "500 MB",
+      "ram": "512 MB",
+      "cpu": "1 GHz",
+      "requirements": "CPU x32/x64",
+      "order": 3,
+      "features": [
+        "Minimalist window manager",
+        "Web browser",
+        "Lightweight file manager",
+        "Text editor",
+        "Archive utilities",
+        "System monitoring",
+        "Network management"
+      ],
+      "includesLabel": "Includes:",
+      "galleryImages": [
+        "/assets/img/flux_00.jpg",
+        "/assets/img/flux_01.jpg",
+        "/assets/img/flux_02.jpg"
+      ],
+      "heroImage": "/assets/img/flux_00.jpg",
+      "showInHero": false,
+      "showGallery": false,
+      "showTorrent": false,
+      "primaryButtonType": "external",
+      "primaryButtonUrl": "https://flux.minios.dev",
+      "primaryButtonIcon": "ExternalLink"
+    }
+  ],
+  "features": [
+    {
+      "id": "live-boot",
+      "icon": "Rocket",
+      "title": "Live Boot System",
+      "description": "Works on virtually any x86-64 computer. Your OS travels with you.",
+      "bulletPoints": [
+        "UEFI & Legacy BIOS support",
+        "Wide hardware compatibility",
+        "No installation required"
+      ],
+      "order": 0
+    },
+    {
+      "id": "ram-boot",
+      "icon": "Gauge",
+      "title": "Lightning Fast RAM Boot",
+      "description": "Runs entirely from RAM for blazing-fast performance. No disk bottlenecks, instant application launches.",
+      "bulletPoints": [
+        "Zero boot delays after loading",
+        "Instant application response",
+        "No HDD/SSD wear during use"
+      ],
+      "order": 1
+    },
+    {
+      "id": "persistence",
+      "icon": "Usb",
+      "title": "USB Persistence",
+      "description": "Your personal portable OS. Everything saves automatically to your USB drive.",
+      "bulletPoints": [
+        "Files & documents persist",
+        "WiFi & network settings saved",
+        "Installed apps stay with you"
+      ],
+      "order": 2
+    },
+    {
+      "id": "debian",
+      "icon": "Server",
+      "title": "Debian Foundation",
+      "description": "Built on Debian Stable foundation. Enterprise reliability meets desktop usability.",
+      "bulletPoints": [
+        "70,000+ packages available",
+        "Regular security updates",
+        "Battle-tested stability"
+      ],
+      "order": 3
+    },
+    {
+      "id": "xfce",
+      "icon": "Monitor",
+      "title": "XFCE Desktop",
+      "description": "Modern, beautiful XFCE desktop that's both elegant and efficient.",
+      "bulletPoints": [
+        "Customizable themes",
+        "Smooth animations",
+        "Low resource usage"
+      ],
+      "order": 4
+    },
+    {
+      "id": "modular",
+      "icon": "PackageOpen",
+      "title": "Modular Architecture",
+      "description": "Extend system with SquashFS modules. Load only what you need, keep it lightweight and flexible.",
+      "bulletPoints": [
+        "SquashFS .sb modules",
+        "Add software on demand",
+        "Create custom modules"
+      ],
+      "order": 5
+    }
+  ]
+}
