@@ -5,17 +5,14 @@
 /* Blog Container */
 .blog-container {
   min-height: 100vh;
-  padding-top: 90px; /* Header height (73px) + extra spacing */
-}
-
-/* Disable scroll-snap for blog pages */
-html.blog-page {
-  scroll-snap-type: none !important;
+  padding-top: 90px;
+  /* Header height (73px) + extra spacing */
 }
 
 /* When announcement banner is visible, add extra padding */
 .has-announcement .blog-container {
-  padding-top: 150px; /* Header + Announcement banner */
+  padding-top: 150px;
+  /* Header + Announcement banner */
 }
 
 /* Blog Filters */
@@ -23,7 +20,8 @@ html.blog-page {
   padding: 1rem 0;
   border-bottom: 1px solid hsl(var(--border));
   margin-bottom: 0;
-  min-height: auto !important; /* Override global section min-height */
+  min-height: auto !important;
+  /* Override global section min-height */
 }
 
 /* Blog Toolbar - Search + Tag Selector */
@@ -291,7 +289,8 @@ html.blog-page {
 /* Blog Posts Grid */
 .blog-posts {
   padding: 1.5rem 0 3rem;
-  min-height: auto !important; /* Override global section min-height */
+  min-height: auto !important;
+  /* Override global section min-height */
 }
 
 .blog-grid {
@@ -311,11 +310,11 @@ html.blog-page {
   .blog-grid {
     grid-template-columns: repeat(var(--blog-cols-mobile, 1), 1fr);
   }
-  
+
   .blog-hero {
     padding: 1.5rem 0 1rem;
   }
-  
+
   .blog-hero-title {
     font-size: 2rem;
   }
@@ -323,7 +322,7 @@ html.blog-page {
   .blog-hero-subtitle {
     font-size: 1rem;
   }
-  
+
   .blog-filters {
     padding: 0.75rem 0 1rem;
   }
@@ -351,7 +350,7 @@ html.blog-page {
     right: 0;
     min-width: auto;
   }
-  
+
   .blog-posts {
     padding: 1rem 0 2rem;
   }
@@ -533,7 +532,8 @@ html.blog-page {
 /* Blog Post Page */
 .blog-post {
   padding: 2rem 0;
-  padding-top: 100px; /* Space for fixed header (73px + extra spacing) */
+  padding-top: 100px;
+  /* Space for fixed header (73px + extra spacing) */
   min-height: 80vh;
 }
 
@@ -583,7 +583,8 @@ html.blog-page {
 }
 
 .blog-post-header {
-  position: static !important; /* Override global header { position: fixed } */
+  position: static !important;
+  /* Override global header { position: fixed } */
   width: auto !important;
   background: transparent !important;
   backdrop-filter: none !important;
@@ -784,7 +785,7 @@ html.blog-page {
 }
 
 /* Remove gaps inside code block */
-.code-block > div:last-child {
+.code-block>div:last-child {
   margin: 0 !important;
   border-radius: 0 !important;
 }
@@ -802,8 +803,8 @@ html.blog-page {
 }
 
 /* Fix SyntaxHighlighter wrapper - remove all border-radius */
-.code-block > div:last-child > div,
-.code-block > div:last-child > div > pre {
+.code-block>div:last-child>div,
+.code-block>div:last-child>div>pre {
   margin: 0 !important;
   padding-top: 1em !important;
   border-radius: 0 !important;
@@ -912,9 +913,12 @@ html.blog-page {
 
 /* Logo Blink Animation */
 @keyframes logo-blink {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.3;
   }
