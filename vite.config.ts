@@ -6,6 +6,7 @@ import { HttpsProxyAgent } from 'https-proxy-agent'
 import type { IncomingMessage, ServerResponse } from 'http'
 import type { ViteDevServer, Connect } from 'vite'
 import matter from 'gray-matter'
+import { marked } from 'marked'
 
 // Default timeout for API requests (ms)
 const API_TIMEOUT = 30000;
@@ -2385,11 +2386,13 @@ function localDataPlugin() {
         }
       };
 
+      // Parse content.json once - used for SEO config, homepage SSR, and blog pre-rendering
+      let content: Record<string, unknown> = {};
       if (fs.existsSync(contentPath)) {
         try {
-          const content = JSON.parse(fs.readFileSync(contentPath, 'utf-8'));
+          content = JSON.parse(fs.readFileSync(contentPath, 'utf-8'));
           if (content.seo) {
-            seoConfig = { ...seoConfig, ...content.seo };
+            seoConfig = { ...seoConfig, ...(content.seo as Record<string, unknown>) };
           }
         } catch (e) {
           console.error('Failed to load SEO config from content.json:', e);
@@ -2631,8 +2634,362 @@ ${externalLinks.length > 0 ? externalLinks.map(link => `<url>
       // Replace the existing <head> content up to the first <link or <script from vite
       indexHtml = indexHtml.replace(/<head>[\s\S]*?(?=<script type="module"|<link rel="modulepreload"|<link rel="stylesheet")/, seoHead + '\n    ');
 
+      // Save the base template (with SEO head but empty root div) for blog page generation later
+      const baseHtmlTemplate = indexHtml;
+
+      // ─── Inject SSR content into homepage for SEO ───
+      // Crawlers without JS see meaningful content instead of an empty <div id="root"></div>
+      {
+        const site = (content.site || {}) as Record<string, string>;
+        const homePage = (content.homePage || {}) as Record<string, unknown>;
+        const hero = (homePage.hero || {}) as Record<string, string>;
+        const featuresConfig = (homePage.features || {}) as Record<string, string>;
+        const editionsData = (content.editions || []) as Array<{
+          id: string; name: string; description: string; size: string;
+          ram: string; cpu: string; requirements: string; features: string[];
+          includesLabel: string; order: number;
+          primaryButtonUrl?: string; primaryButtonType?: string;
+        }>;
+        const featuresData = (content.features || []) as Array<{
+          id: string; title: string; description: string; bulletPoints: string[];
+          order: number;
+        }>;
+        const nav = (content.navigation || {}) as Record<string, unknown>;
+        const headerLinks = (nav.headerLinks || []) as Array<{
+          id: string; label: string; url: string; type: string; enabled: boolean;
+        }>;
+        const footerGroups = (nav.footerGroups || []) as Array<{
+          id: string; title: string; links: Array<{
+            id: string; label: string; url: string; type: string; enabled: boolean;
+          }>;
+        }>;
+        const downloadPage = (content.downloadPage || {}) as Record<string, string>;
+
+        // Sort editions and features by order
+        const sortedEditions = [...editionsData].sort((a, b) => a.order - b.order);
+        const sortedFeatures = [...featuresData].sort((a, b) => a.order - b.order);
+
+        // Build navigation HTML
+        const navHtml = headerLinks
+          .filter(l => l.enabled)
+          .map(l => `<a href="${l.url}">${l.label}</a>`)
+          .join('\n            ');
+
+        // Build hero section
+        const heroHtml = `
+        <section>
+          <p>${site.heroBadge || ''}</p>
+          <h1>${hero.prefix || ''} ${hero.tagline || ''}</h1>
+          <p>${(content.seo as { description?: string })?.description || site.description || ''}</p>
+          <a href="#download">${hero.primaryButton || 'Get MiniOS'}</a>
+          <a href="#features">${hero.secondaryButton || 'Why MiniOS?'}</a>
+        </section>`;
+
+        // Build features section
+        const featureCardsHtml = sortedFeatures.map(f => `
+          <div>
+            <h3>${f.title}</h3>
+            <p>${f.description}</p>
+            <ul>
+              ${f.bulletPoints.map(bp => `<li>${bp}</li>`).join('\n              ')}
+            </ul>
+          </div>`).join('');
+
+        const featuresHtml = `
+        <section id="features">
+          <h2>${featuresConfig.sectionTitle || 'Why MiniOS?'}</h2>
+          <p>${featuresConfig.sectionSubtitle || ''}</p>
+          ${featureCardsHtml}
+        </section>`;
+
+        // Build editions/download section
+        const editionCardsHtml = sortedEditions.map(ed => `
+          <div>
+            <h3>${ed.name}</h3>
+            <p>${ed.description}</p>
+            <dl>
+              <dt>Size</dt><dd>${ed.size}</dd>
+              <dt>RAM</dt><dd>${ed.ram}</dd>
+              <dt>CPU</dt><dd>${ed.cpu}</dd>
+              <dt>Architecture</dt><dd>${ed.requirements}</dd>
+            </dl>
+            <p>${ed.includesLabel}</p>
+            <ul>
+              ${ed.features.map(feat => `<li>${feat}</li>`).join('\n              ')}
+            </ul>
+          </div>`).join('');
+
+        const downloadHtml = `
+        <section id="download">
+          <h2>Get MiniOS</h2>
+          <p>Version ${(downloadPage as { version?: string }).version || ''}</p>
+          ${editionCardsHtml}
+        </section>`;
+
+        // Build footer HTML
+        const footerGroupsHtml = footerGroups.map(group => `
+            <div>
+              <h4>${group.title}</h4>
+              <ul>
+                ${group.links.filter(l => l.enabled).map(l => `<li><a href="${l.url}">${l.label}</a></li>`).join('\n                ')}
+              </ul>
+            </div>`).join('');
+
+        const footerHtml = `
+        <footer>
+          <div>
+            <p>${site.logoText || 'MiniOS'} &mdash; ${site.description || ''}</p>
+            ${footerGroupsHtml}
+            <p>&copy; ${site.copyright || ''}</p>
+          </div>
+        </footer>`;
+
+        // Compose the full SSR content
+        const homepageSsrContent = `      <header>
+          <nav>
+            <a href="/">${site.logoText || 'MiniOS'}</a>
+            ${navHtml}
+          </nav>
+        </header>
+        <main>${heroHtml}${featuresHtml}${downloadHtml}
+        </main>${footerHtml}`;
+
+        // Inject into <div id="root">
+        indexHtml = indexHtml.replace(
+          '<div id="root"></div>',
+          `<div id="root">\n${homepageSsrContent}\n      </div>`
+        );
+      }
+
       fs.writeFileSync(indexPath, indexHtml);
-      console.log('✓ Generated index.html with SEO meta tags from content.json');
+      console.log('✓ Generated index.html with SEO meta tags and SSR content from content.json');
+
+      // ─── Pre-render static HTML pages for blog (SEO) ───
+      // This generates static HTML files so search engine crawlers can index blog content
+      // without needing to execute JavaScript. Users with JS will still get the full SPA experience.
+      try {
+        // Use the base template saved before homepage SSR injection (has SEO head but empty root div)
+        const baseHtml = baseHtmlTemplate;
+
+        // Helper: strip markdown formatting and truncate for meta descriptions
+        function cleanExcerpt(text: string, maxLen = 160): string {
+          return text
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // [text](url) -> text
+            .replace(/[*_~`#]/g, '')                   // remove markdown formatting chars
+            .replace(/\n+/g, ' ')                      // newlines -> spaces
+            .replace(/\s+/g, ' ')                      // collapse whitespace
+            .trim()
+            .slice(0, maxLen);
+        }
+
+        // Helper: generate a blog page HTML from the base template with custom head and SSR content
+        function generateBlogPage(options: {
+          pageTitle: string;
+          pageDescription: string;
+          pageUrl: string;
+          pageType: 'website' | 'article';
+          pageImage?: string;
+          ssrContent: string;
+          articleMeta?: {
+            author?: string;
+            publishedTime?: string;
+            modifiedTime?: string;
+            tags?: string[];
+          };
+          jsonLdOverride?: string;
+        }): string {
+          let html = baseHtml;
+          const desc = cleanExcerpt(options.pageDescription);
+
+          // Replace <title>
+          html = html.replace(/<title>[^<]*<\/title>/, `<title>${options.pageTitle}</title>`);
+
+          // Replace meta name="title"
+          html = html.replace(/<meta name="title" content="[^"]*"/, `<meta name="title" content="${options.pageTitle}"`);
+
+          // Replace meta name="description"
+          html = html.replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${desc.replace(/"/g, '&quot;')}"`);
+
+          // Replace canonical URL
+          html = html.replace(/<link rel="canonical" href="[^"]*"/, `<link rel="canonical" href="${options.pageUrl}"`);
+
+          // Replace OG tags
+          html = html.replace(/<meta property="og:type" content="[^"]*"/, `<meta property="og:type" content="${options.pageType}"`);
+          html = html.replace(/<meta property="og:url" content="[^"]*"/, `<meta property="og:url" content="${options.pageUrl}"`);
+          html = html.replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${options.pageTitle}"`);
+          html = html.replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${desc.replace(/"/g, '&quot;')}"`);
+          if (options.pageImage) {
+            html = html.replace(/<meta property="og:image" content="[^"]*"/, `<meta property="og:image" content="${options.pageImage}"`);
+          }
+
+          // Replace Twitter tags
+          html = html.replace(/<meta property="twitter:url" content="[^"]*"/, `<meta property="twitter:url" content="${options.pageUrl}"`);
+          html = html.replace(/<meta property="twitter:title" content="[^"]*"/, `<meta property="twitter:title" content="${options.pageTitle}"`);
+          html = html.replace(/<meta property="twitter:description" content="[^"]*"/, `<meta property="twitter:description" content="${desc.replace(/"/g, '&quot;')}"`);
+          if (options.pageImage) {
+            html = html.replace(/<meta property="twitter:image" content="[^"]*"/, `<meta property="twitter:image" content="${options.pageImage}"`);
+          }
+
+          // Build extra head tags (article meta + JSON-LD) to insert before the existing JSON-LD
+          const extraHeadParts: string[] = [];
+
+          // Add article-specific meta tags for blog posts
+          if (options.pageType === 'article' && options.articleMeta) {
+            if (options.articleMeta.author) {
+              extraHeadParts.push(`<meta property="article:author" content="${options.articleMeta.author}" />`);
+            }
+            if (options.articleMeta.publishedTime) {
+              extraHeadParts.push(`<meta property="article:published_time" content="${options.articleMeta.publishedTime}" />`);
+            }
+            if (options.articleMeta.modifiedTime) {
+              extraHeadParts.push(`<meta property="article:modified_time" content="${options.articleMeta.modifiedTime}" />`);
+            }
+            if (options.articleMeta.tags) {
+              for (const tag of options.articleMeta.tags) {
+                extraHeadParts.push(`<meta property="article:tag" content="${tag}" />`);
+              }
+            }
+          }
+
+          // Add JSON-LD structured data for articles (replaces the SoftwareApplication one)
+          if (options.jsonLdOverride) {
+            extraHeadParts.push(options.jsonLdOverride);
+          }
+
+          // Insert extra tags before the existing JSON-LD Structured Data comment
+          if (extraHeadParts.length > 0) {
+            const extraHtml = extraHeadParts.join('\n    ');
+            html = html.replace(
+              '<!-- JSON-LD Structured Data -->',
+              `${extraHtml}\n    <!-- JSON-LD Structured Data -->`
+            );
+          }
+
+          // Inject SSR content into the root div so crawlers see the content
+          // Content is placed inside <div id="root"> as visible HTML.
+          // When the SPA JS loads, React will replace this with the interactive version.
+          html = html.replace(
+            '<div id="root"></div>',
+            `<div id="root">\n${options.ssrContent}\n    </div>`
+          );
+
+          return html;
+        }
+
+        // Helper: escape HTML
+        function escapeHtml(text: string): string {
+          return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+        }
+
+        // Helper: format date
+        function formatDate(dateString: string): string {
+          const date = new Date(dateString);
+          return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // Get all published blog posts
+        const allPosts = getAllBlogPosts(true) as BlogPost[];
+        const publishedPosts = allPosts.filter(p => p.published);
+
+        // ── Generate /blog/index.html (blog listing page) ──
+        const blogDir = path.resolve(__dirname, 'dist', 'blog');
+        if (!fs.existsSync(blogDir)) {
+          fs.mkdirSync(blogDir, { recursive: true });
+        }
+
+        const blogListContent = publishedPosts.map(post => `
+      <article>
+        <h2><a href="${baseUrl}/blog/${post.slug}">${escapeHtml(post.title)}</a></h2>
+        <p>${escapeHtml(cleanExcerpt(post.excerpt, 300))}</p>
+        <time datetime="${post.publishedAt}">${formatDate(post.publishedAt)}</time>
+        ${post.author ? `<span>${escapeHtml(post.author)}</span>` : ''}
+        ${post.tags ? post.tags.map(t => `<span>${escapeHtml(t)}</span>`).join(' ') : ''}
+      </article>`).join('\n');
+
+        const blogListHtml = generateBlogPage({
+          pageTitle: 'Blog - MiniOS',
+          pageDescription: 'Latest news, updates, and articles from the MiniOS team.',
+          pageUrl: `${baseUrl}/blog`,
+          pageType: 'website',
+          ssrContent: `      <main>\n        <h1>MiniOS Blog</h1>\n${blogListContent}\n      </main>`,
+        });
+
+        fs.writeFileSync(path.resolve(blogDir, 'index.html'), blogListHtml);
+        console.log('✓ Generated /blog/index.html (blog listing)');
+
+        // ── Generate /blog/{slug}/index.html for each post ──
+        let generatedPosts = 0;
+        for (const post of publishedPosts) {
+          const postDir = path.resolve(blogDir, post.slug);
+          if (!fs.existsSync(postDir)) {
+            fs.mkdirSync(postDir, { recursive: true });
+          }
+
+          // Convert markdown to HTML
+          const contentHtml = marked.parse(post.content) as string;
+
+          // Build JSON-LD for BlogPosting
+          const cleanDesc = cleanExcerpt(post.excerpt, 300);
+          const postJsonLd = `<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "${post.title.replace(/"/g, '\\"')}",
+      "description": "${cleanDesc.replace(/"/g, '\\"')}",
+      "url": "${baseUrl}/blog/${post.slug}",
+      "datePublished": "${post.publishedAt}",
+      ${post.updatedAt ? `"dateModified": "${post.updatedAt}",` : ''}
+      "author": {
+        "@type": "Person",
+        "name": "${(post.author || 'MiniOS Team').replace(/"/g, '\\"')}"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "MiniOS",
+        "url": "${baseUrl}"
+      }${post.featuredImage ? `,
+      "image": "${post.featuredImage.startsWith('http') ? post.featuredImage : baseUrl + post.featuredImage}"` : ''}${post.tags && post.tags.length > 0 ? `,
+      "keywords": "${post.tags.join(', ')}"` : ''}
+    }
+    </script>`;
+
+          const postImage = post.featuredImage
+            ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${baseUrl}${post.featuredImage}`)
+            : `${baseUrl}${seoConfig.ogImage}`;
+
+          const postHtml = generateBlogPage({
+            pageTitle: `${post.title} - MiniOS Blog`,
+            pageDescription: post.excerpt,  // cleanExcerpt is applied inside generateBlogPage
+            pageUrl: `${baseUrl}/blog/${post.slug}`,
+            pageType: 'article',
+            pageImage: postImage,
+            articleMeta: {
+              author: post.author || 'MiniOS Team',
+              publishedTime: post.publishedAt,
+              modifiedTime: post.updatedAt,
+              tags: post.tags,
+            },
+            jsonLdOverride: postJsonLd,
+            ssrContent: `      <article>
+        <h1>${escapeHtml(post.title)}</h1>
+        <time datetime="${post.publishedAt}">${formatDate(post.publishedAt)}</time>
+        ${post.author ? `<p>By ${escapeHtml(post.author)}</p>` : ''}
+        <div>${contentHtml}</div>
+      </article>`,
+          });
+
+          fs.writeFileSync(path.resolve(postDir, 'index.html'), postHtml);
+          generatedPosts++;
+        }
+
+        console.log(`✓ Pre-rendered ${generatedPosts} blog post pages for SEO`);
+      } catch (error) {
+        console.error('Failed to pre-render blog pages:', error);
+      }
     }
   };
 }
