@@ -19,11 +19,20 @@ const LoadingFallback = () => (
 
 // Initialize i18n with dynamic language discovery, then render app
 initI18n().then(() => {
-  createRoot(document.getElementById('root')!).render(
+  const html = document.documentElement
+  const rootElement = document.getElementById('root')!
+  rootElement.innerHTML = ''
+
+  createRoot(rootElement).render(
     <StrictMode>
       <Suspense fallback={<LoadingFallback />}>
         <App />
       </Suspense>
     </StrictMode>,
   )
+
+  requestAnimationFrame(() => {
+    html.classList.add('app-ready')
+    html.classList.remove('js-app-loading')
+  })
 })

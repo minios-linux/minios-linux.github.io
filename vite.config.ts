@@ -2629,7 +2629,9 @@ ${externalLinks.length > 0 ? externalLinks.map(link => `<url>
     <!-- Google Verification -->
     <meta name="google-site-verification" content="${seoConfig.googleVerification}" />` : ''}
     ${analyticsScripts}
-    ${jsonLd}`;
+    ${jsonLd}
+    <style>html,body{margin:0;min-height:100%;background:#0f1115}#root{min-height:100vh}.app-loader{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at top,rgba(56,174,235,.18),transparent 45%),#0f1115;color:#f8fafc;z-index:9999}.app-loader__content{display:flex;flex-direction:column;align-items:center;gap:14px;font:500 14px/1.4 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}.app-loader__spinner{width:44px;height:44px;border:2px solid rgba(255,255,255,.14);border-top-color:#38aeeb;border-radius:999px;animation:app-loader-spin .9s linear infinite;box-shadow:0 0 24px rgba(56,174,235,.18)}html.js-app-loading .app-loader{display:flex}html.js-app-loading [data-seo-shell]{display:none!important}html.app-ready .app-loader{display:none}@keyframes app-loader-spin{to{transform:rotate(360deg)}}</style>
+    <script>(() => { const root = document.documentElement; root.classList.add('js-app-loading'); })()</script>`;
 
       // Replace the existing <head> content up to the first <link or <script from vite
       indexHtml = indexHtml.replace(/<head>[\s\S]*?(?=<script type="module"|<link rel="modulepreload"|<link rel="stylesheet")/, seoHead + '\n    ');
@@ -2757,7 +2759,7 @@ ${externalLinks.length > 0 ? externalLinks.map(link => `<url>
         // Inject into <div id="root">
         indexHtml = indexHtml.replace(
           '<div id="root"></div>',
-          `<div id="root">\n${homepageSsrContent}\n      </div>`
+          `<div id="root">\n        <div data-seo-shell>\n${homepageSsrContent}\n        </div>\n      </div>`
         );
       }
 
@@ -2870,7 +2872,7 @@ ${externalLinks.length > 0 ? externalLinks.map(link => `<url>
           // When the SPA JS loads, React will replace this with the interactive version.
           html = html.replace(
             '<div id="root"></div>',
-            `<div id="root">\n${options.ssrContent}\n    </div>`
+            `<div id="root">\n      <div data-seo-shell>\n${options.ssrContent}\n      </div>\n    </div>`
           );
 
           return html;
