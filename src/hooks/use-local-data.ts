@@ -3,10 +3,11 @@ import { useState, useEffect, useCallback } from 'react';
 // Get base URL for assets
 const getBaseUrl = () => import.meta.env.BASE_URL || '/';
 
-// Check if we're in development mode (localhost)
-export const isDev = () => 
-  typeof window !== 'undefined' && 
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+// Check if we're in Vite development mode.
+//
+// Important: production builds can be served from localhost (e.g. `serve dist`),
+// but they must still use static JSON files from `dist/data/*`, not `/api/*` routes.
+export const isDev = () => Boolean(import.meta.env.DEV);
 
 // Get full URL for assets (handles base path for GitHub Pages subdirectory deployment)
 export const getAssetUrl = (path: string): string => {

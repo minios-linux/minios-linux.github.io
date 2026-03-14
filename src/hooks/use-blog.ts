@@ -6,6 +6,46 @@ import { isDev } from './use-local-data';
 // Get base URL for assets
 const getBaseUrl = () => import.meta.env.BASE_URL || '/';
 
+async function fetchJsonFromCandidates<T>(urls: string[], isValid: (v: unknown) => v is T): Promise<T> {
+  let lastError: Error | null = null;
+
+  for (const url of urls) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        continue;
+      }
+
+      const parsed = await response.json();
+      if (isValid(parsed)) {
+        return parsed;
+      }
+
+      lastError = new Error(`Invalid JSON shape from ${url}`);
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+    }
+  }
+
+  throw lastError || new Error('No valid response from candidates');
+}
+
+function isBlogListPayload(v: unknown): v is { posts: BlogPost[] } {
+  if (!v || typeof v !== 'object') {
+    return false;
+  }
+  const posts = (v as { posts?: unknown }).posts;
+  return Array.isArray(posts);
+}
+
+function isBlogPostPayload(v: unknown): v is BlogPost {
+  if (!v || typeof v !== 'object') {
+    return false;
+  }
+  const obj = v as { slug?: unknown; title?: unknown; content?: unknown };
+  return typeof obj.slug === 'string' && typeof obj.title === 'string' && typeof obj.content === 'string';
+}
+
 // List posts with "Load More" pagination
 export function useBlogPosts(options?: {
   tag?: string;
@@ -33,17 +73,14 @@ export function useBlogPosts(options?: {
           if (!response.ok) throw new Error('Failed to fetch posts');
           data = await response.json();
         } else {
-          // In production, use static JSON with language suffix
+          // In production, use static JSON with language suffix.
+          // Fallback handles both HTTP errors and invalid JSON payloads.
           const langSuffix = language === 'en' ? '' : `.${language}`;
-          const response = await fetch(`${getBaseUrl()}data/blog/posts${langSuffix}.json`);
-          if (!response.ok) {
-            // Fallback to English if translation not available
-            const fallbackResponse = await fetch(`${getBaseUrl()}data/blog/posts.json`);
-            if (!fallbackResponse.ok) throw new Error('Failed to fetch posts');
-            data = await fallbackResponse.json();
-          } else {
-            data = await response.json();
+          const candidates = [`${getBaseUrl()}data/blog/posts${langSuffix}.json`];
+          if (language !== 'en') {
+            candidates.push(`${getBaseUrl()}data/blog/posts.json`);
           }
+          data = await fetchJsonFromCandidates(candidates, isBlogListPayload);
         }
         
         let filteredPosts = isDev() 
@@ -106,14 +143,17 @@ export function useBlogPost(slug: string) {
           const params = new URLSearchParams({ lang: language });
           response = await fetch(`/api/blog/post/${slug}?${params}`);
         } else {
-          // In production, use static JSON with language suffix
+          // In production, use static JSON with language suffix.
+          // Fallback handles both HTTP errors and invalid JSON payloads.
           const langSuffix = language === 'en' ? '' : `.${language}`;
-          response = await fetch(`${getBaseUrl()}data/blog/post/${slug}${langSuffix}.json`);
-          
-          // Fallback to English if translation not available
-          if (!response.ok && language !== 'en') {
-            response = await fetch(`${getBaseUrl()}data/blog/post/${slug}.json`);
+          const candidates = [`${getBaseUrl()}data/blog/post/${slug}${langSuffix}.json`];
+          if (language !== 'en') {
+            candidates.push(`${getBaseUrl()}data/blog/post/${slug}.json`);
           }
+
+          const data = await fetchJsonFromCandidates(candidates, isBlogPostPayload);
+          setPost(data);
+          return;
         }
         
         if (!response.ok) {

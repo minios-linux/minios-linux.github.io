@@ -528,6 +528,43 @@ interface BlogPost {
   telegramPostId?: number;
 }
 
+const BLOG_POSTS_DIR = path.resolve(__dirname, 'data', 'blog', 'posts');
+const BLOG_SOURCE_LANG = 'en';
+
+function getBlogLangDir(lang: string): string {
+  return path.resolve(BLOG_POSTS_DIR, lang);
+}
+
+function getBlogPostPath(slug: string, lang: string): string {
+  return path.resolve(getBlogLangDir(lang), `${slug}.md`);
+}
+
+function getBlogSourceSlugs(): string[] {
+  const srcDir = getBlogLangDir(BLOG_SOURCE_LANG);
+  if (!fs.existsSync(srcDir)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(srcDir)
+    .filter(file => file.endsWith('.md'))
+    .map(file => file.replace('.md', ''))
+    .sort();
+}
+
+function getBlogLanguageDirs(): string[] {
+  if (!fs.existsSync(BLOG_POSTS_DIR)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(BLOG_POSTS_DIR)
+    .filter(entry => {
+      const entryPath = path.resolve(BLOG_POSTS_DIR, entry);
+      return fs.statSync(entryPath).isDirectory();
+    });
+}
+
 // Parse single .md file with YAML frontmatter
 function parseBlogPost(filePath: string, slug: string): BlogPost | null {
   try {
@@ -561,22 +598,26 @@ function parseBlogPost(filePath: string, slug: string): BlogPost | null {
 
 // Get all blog posts from data/blog/posts/
 function getAllBlogPosts(includeContent = false, lang?: string): Omit<BlogPost, 'content'>[] | BlogPost[] {
-  const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
+  if (!fs.existsSync(BLOG_POSTS_DIR)) {
+    return [];
+  }
 
-  if (!fs.existsSync(postsDir)) {
+  const sourceLangDir = getBlogLangDir(BLOG_SOURCE_LANG);
+  if (!fs.existsSync(sourceLangDir)) {
     return [];
   }
 
   const posts: (Omit<BlogPost, 'content'> | BlogPost)[] = [];
-  const files = fs.readdirSync(postsDir).filter(f => f.endsWith('.md'));
+  const slugs = getBlogSourceSlugs();
+  const requestedLang = lang || BLOG_SOURCE_LANG;
 
-  for (const file of files) {
-    const slug = file.replace('.md', '');
-    let filePath = path.resolve(postsDir, file);
+  for (const slug of slugs) {
+    const sourcePath = getBlogPostPath(slug, BLOG_SOURCE_LANG);
+    let filePath = sourcePath;
 
     // Check for translated version if language is specified
-    if (lang && lang !== 'en') {
-      const translatedPath = path.resolve(postsDir, 'translations', `${slug}.${lang}.md`);
+    if (requestedLang !== BLOG_SOURCE_LANG) {
+      const translatedPath = getBlogPostPath(slug, requestedLang);
       if (fs.existsSync(translatedPath)) {
         filePath = translatedPath;
       }
@@ -585,9 +626,8 @@ function getAllBlogPosts(includeContent = false, lang?: string): Omit<BlogPost, 
     const post = parseBlogPost(filePath, slug);
     if (post) {
       // Inherit telegramDiscussion/telegramPostId from original if missing in translation
-      if (lang && lang !== 'en' && (!post.telegramDiscussion || !post.telegramPostId)) {
-        const originalPath = path.resolve(postsDir, file);
-        const originalPost = parseBlogPost(originalPath, slug);
+      if (requestedLang !== BLOG_SOURCE_LANG && (!post.telegramDiscussion || !post.telegramPostId)) {
+        const originalPost = parseBlogPost(sourcePath, slug);
         if (originalPost) {
           if (!post.telegramDiscussion && originalPost.telegramDiscussion) {
             post.telegramDiscussion = originalPost.telegramDiscussion;
@@ -619,22 +659,14 @@ function getAllBlogPosts(includeContent = false, lang?: string): Omit<BlogPost, 
 
 // Save blog post (create or update)
 function saveBlogPost(slug: string, frontmatter: Record<string, unknown>, content: string, lang?: string): void {
-  const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
+  const targetLang = lang || BLOG_SOURCE_LANG;
+  const targetDir = getBlogLangDir(targetLang);
 
-  if (!fs.existsSync(postsDir)) {
-    fs.mkdirSync(postsDir, { recursive: true });
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
   }
 
-  let filePath: string;
-  if (lang && lang !== 'en') {
-    const translationsDir = path.resolve(postsDir, 'translations');
-    if (!fs.existsSync(translationsDir)) {
-      fs.mkdirSync(translationsDir, { recursive: true });
-    }
-    filePath = path.resolve(translationsDir, `${slug}.${lang}.md`);
-  } else {
-    filePath = path.resolve(postsDir, `${slug}.md`);
-  }
+  const filePath = getBlogPostPath(slug, targetLang);
 
   // Build frontmatter + content
   const fileContent = matter.stringify(content, frontmatter);
@@ -643,28 +675,21 @@ function saveBlogPost(slug: string, frontmatter: Record<string, unknown>, conten
 
 // Delete blog post
 function deleteBlogPost(slug: string): void {
-  const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
-  const filePath = path.resolve(postsDir, `${slug}.md`);
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
-  }
-
-  // Also delete translations
-  const translationsDir = path.resolve(postsDir, 'translations');
-  if (fs.existsSync(translationsDir)) {
-    const files = fs.readdirSync(translationsDir).filter(f => f.startsWith(`${slug}.`));
-    for (const file of files) {
-      fs.unlinkSync(path.resolve(translationsDir, file));
+  for (const lang of getBlogLanguageDirs()) {
+    const filePath = getBlogPostPath(slug, lang);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
     }
   }
 }
 
 // Delete a specific blog post translation
 function deleteBlogTranslation(slug: string, lang: string): void {
-  const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
-  const translationsDir = path.resolve(postsDir, 'translations');
-  const filePath = path.resolve(translationsDir, `${slug}.${lang}.md`);
+  if (lang === BLOG_SOURCE_LANG) {
+    return;
+  }
+
+  const filePath = getBlogPostPath(slug, lang);
 
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
@@ -673,30 +698,117 @@ function deleteBlogTranslation(slug: string, lang: string): void {
 
 // Delete all translations for a specific language
 function deleteAllBlogTranslationsForLanguage(lang: string): void {
-  const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
-  const translationsDir = path.resolve(postsDir, 'translations');
+  if (lang === BLOG_SOURCE_LANG) {
+    return;
+  }
 
-  if (fs.existsSync(translationsDir)) {
-    const files = fs.readdirSync(translationsDir).filter(f => f.endsWith(`.${lang}.md`));
+  const langDir = getBlogLangDir(lang);
+
+  if (fs.existsSync(langDir)) {
+    const files = fs.readdirSync(langDir).filter(f => f.endsWith('.md'));
     for (const file of files) {
-      fs.unlinkSync(path.resolve(translationsDir, file));
+      fs.unlinkSync(path.resolve(langDir, file));
     }
   }
 }
 
 // Delete all translations for all languages
 function deleteAllBlogTranslations(): void {
-  const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
-  const translationsDir = path.resolve(postsDir, 'translations');
+  for (const lang of getBlogLanguageDirs()) {
+    if (lang === BLOG_SOURCE_LANG) {
+      continue;
+    }
 
-  if (fs.existsSync(translationsDir)) {
-    const files = fs.readdirSync(translationsDir);
+    const langDir = getBlogLangDir(lang);
+    const files = fs.readdirSync(langDir).filter(f => f.endsWith('.md'));
     for (const file of files) {
-      if (file.endsWith('.md')) {
-        fs.unlinkSync(path.resolve(translationsDir, file));
+      fs.unlinkSync(path.resolve(langDir, file));
+    }
+  }
+}
+
+function getAvailableBlogTranslations(slug: string): string[] {
+  const languages = getLanguagesWithMeta()
+    .map(langMeta => langMeta.code)
+    .filter(code => code !== BLOG_SOURCE_LANG);
+
+  return languages.filter(lang => fs.existsSync(getBlogPostPath(slug, lang)));
+}
+
+function getBlogOriginalMtime(slug: string): Date | null {
+  const originalPath = getBlogPostPath(slug, BLOG_SOURCE_LANG);
+  try {
+    const originalStat = fs.statSync(originalPath);
+    return originalStat.mtime;
+  } catch {
+    return null;
+  }
+}
+
+function getBlogTranslationStatus(slug: string, lang: string, originalMtime: Date | null): 'missing' | 'ok' | 'outdated' {
+  const translatedPath = getBlogPostPath(slug, lang);
+
+  if (!fs.existsSync(translatedPath)) {
+    return 'missing';
+  }
+
+  if (!originalMtime) {
+    return 'ok';
+  }
+
+  try {
+    const translatedStat = fs.statSync(translatedPath);
+    return originalMtime > translatedStat.mtime ? 'outdated' : 'ok';
+  } catch {
+    return 'ok';
+  }
+}
+
+function getSourceBlogPostPath(slug: string): string {
+  return getBlogPostPath(slug, BLOG_SOURCE_LANG);
+}
+
+function getTranslatedBlogPostPath(slug: string, lang: string): string {
+  return getBlogPostPath(slug, lang);
+}
+
+function getBlogSitemapSlugs(): string[] {
+  const srcDir = getBlogLangDir(BLOG_SOURCE_LANG);
+  if (!fs.existsSync(srcDir)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(srcDir)
+    .filter(file => file.endsWith('.md'))
+    .map(file => file.replace('.md', ''));
+}
+
+function getBlogPostForLang(slug: string, lang: string): BlogPost | null {
+  const sourcePath = getSourceBlogPostPath(slug);
+  const translatedPath = getTranslatedBlogPostPath(slug, lang);
+  const filePath = lang === BLOG_SOURCE_LANG || !fs.existsSync(translatedPath)
+    ? sourcePath
+    : translatedPath;
+
+  const post = parseBlogPost(filePath, slug);
+  if (!post) {
+    return null;
+  }
+
+  if (lang !== BLOG_SOURCE_LANG && (!post.telegramDiscussion || !post.telegramPostId)) {
+    const originalPost = parseBlogPost(sourcePath, slug);
+    if (originalPost) {
+      if (!post.telegramDiscussion && originalPost.telegramDiscussion) {
+        post.telegramDiscussion = originalPost.telegramDiscussion;
+      }
+      if (!post.telegramPostId && originalPost.telegramPostId) {
+        post.telegramPostId = originalPost.telegramPostId;
       }
     }
   }
+
+  return post;
 }
 
 // Get all unique tags
@@ -1889,50 +2001,15 @@ function localDataPlugin() {
             const urlParams = new URL(req.url, `http://${req.headers.host}`);
             const lang = urlParams.searchParams.get('lang') || 'en';
 
-            const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
-            let filePath = path.resolve(postsDir, `${slug}.md`);
-
-            // Check for translated version
-            if (lang !== 'en') {
-              const translatedPath = path.resolve(postsDir, 'translations', `${slug}.${lang}.md`);
-              if (fs.existsSync(translatedPath)) {
-                filePath = translatedPath;
-              }
-            }
-
-            const post = parseBlogPost(filePath, slug);
+            const post = getBlogPostForLang(slug, lang);
 
             if (!post) {
               sendJson(res, 404, { error: 'Post not found' });
               return;
             }
 
-            // Inherit telegramDiscussion/telegramPostId from original if missing in translation
-            if (lang !== 'en') {
-              const originalPath = path.resolve(postsDir, `${slug}.md`);
-              const originalPost = parseBlogPost(originalPath, slug);
-              if (originalPost) {
-                if (!post.telegramDiscussion && originalPost.telegramDiscussion) {
-                  post.telegramDiscussion = originalPost.telegramDiscussion;
-                }
-                if (!post.telegramPostId && originalPost.telegramPostId) {
-                  post.telegramPostId = originalPost.telegramPostId;
-                }
-              }
-            }
-
             // Get available translations
-            const translationsDir = path.resolve(postsDir, 'translations');
-            const translations: string[] = [];
-            if (fs.existsSync(translationsDir)) {
-              const files = fs.readdirSync(translationsDir);
-              for (const file of files) {
-                if (file.startsWith(`${slug}.`) && file.endsWith('.md')) {
-                  const langCode = file.replace(`${slug}.`, '').replace('.md', '');
-                  translations.push(langCode);
-                }
-              }
-            }
+            const translations = getAvailableBlogTranslations(slug);
 
             sendJson(res, 200, { ...post, translations });
           } catch (error) {
@@ -1958,40 +2035,17 @@ function localDataPlugin() {
         else if (req.method === 'GET' && req.url === '/api/blog/translations') {
           try {
             const posts = getAllBlogPosts(false) as Omit<BlogPost, 'content'>[];
-            const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
-            const translationsDir = path.resolve(postsDir, 'translations');
             const languages = getLanguagesWithMeta().filter(l => l.code !== 'en');
 
             const result = posts.map(post => {
               // Get original post's updatedAt timestamp
-              const originalPath = path.resolve(postsDir, `${post.slug}.md`);
-              let originalMtime: Date | null = null;
-              try {
-                const originalStat = fs.statSync(originalPath);
-                originalMtime = originalStat.mtime;
-              } catch {
-                // File might not exist
-              }
+              const originalMtime = getBlogOriginalMtime(post.slug);
 
               // Check each translation: 'missing' | 'ok' | 'outdated'
               const translations: Record<string, 'missing' | 'ok' | 'outdated'> = {};
 
               for (const lang of languages) {
-                const translatedPath = path.resolve(translationsDir, `${post.slug}.${lang.code}.md`);
-
-                if (!fs.existsSync(translatedPath)) {
-                  translations[lang.code] = 'missing';
-                } else if (originalMtime) {
-                  try {
-                    const translatedStat = fs.statSync(translatedPath);
-                    // If original was modified after translation, it's outdated
-                    translations[lang.code] = originalMtime > translatedStat.mtime ? 'outdated' : 'ok';
-                  } catch {
-                    translations[lang.code] = 'ok';
-                  }
-                } else {
-                  translations[lang.code] = 'ok';
-                }
+                translations[lang.code] = getBlogTranslationStatus(post.slug, lang.code, originalMtime);
               }
 
               return {
@@ -2417,18 +2471,14 @@ function localDataPlugin() {
       }));
 
       // Blog posts
-      const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
       const blogPages: Array<{ loc: string; priority: string; changefreq: string }> = [];
-      if (fs.existsSync(postsDir)) {
-        const postFiles = fs.readdirSync(postsDir).filter(f => f.endsWith('.md'));
-        for (const file of postFiles) {
-          const slug = file.replace('.md', '');
-          blogPages.push({
-            loc: `/blog/${slug}`,
-            priority: '0.7',
-            changefreq: 'monthly'
-          });
-        }
+      const blogSlugs = getBlogSitemapSlugs();
+      for (const slug of blogSlugs) {
+        blogPages.push({
+          loc: `/blog/${slug}`,
+          priority: '0.7',
+          changefreq: 'monthly'
+        });
       }
 
       // External links from SEO config

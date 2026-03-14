@@ -1,26 +1,23 @@
 ---
 title: Blog Resmi Kami Kini Hadir!
 excerpt: >-
-  Halo, teman-teman!
+    Halo, teman-teman!
 
 
-  Situs web kami saat ini menerima lebih dari 1.500 kunjungan unik setiap
-  harinya, dan jumlah ini terus meningkat setiap bulan. Kami telah melangkah
-  jauh dalam meningkatkan pengalaman Anda menggunakan MiniOS: selain halaman
-  sederhana untuk mendapatkan informasi awal mengenai sistem dan mengunduh
-  distribusi, kini kami telah memiliki [dokumentasi](https://minios.dev/docs).
-  Kami telah mengisi bagian ini dengan artikel mendetail yang mencakup hampir
-  setiap aspek teknis dalam menggunakan sistem ini.
+    Situs web kami saat ini menerima lebih dari 1.500 kunjungan unik setiap harinya, dan jumlah ini terus meningkat setiap bulan. Kami telah melangkah jauh dalam meningkatkan pengalaman Anda menggunakan MiniOS: selain halaman sederhana untuk mendapatkan informasi awal mengenai sistem dan mengunduh distribusi, kini kami telah memiliki [dokumentasi](https://minios.dev/docs). Kami telah mengisi bagian ini dengan artikel mendetail yang mencakup hampir setiap aspek teknis dalam menggunakan sistem ini.
 author: MiniOS Team
 publishedAt: '2026-02-06T13:54:00.000Z'
 updatedAt: '2026-02-06T16:57:03.377Z'
 tags:
-  - news
-  - minios
-  - blog
-  - announcement
+    - news
+    - minios
+    - blog
+    - announcement
 published: true
+telegramPostId: 406
+telegramDiscussion: 'https://t.me/minios_news/406'
 ---
+
 Halo, teman-teman!
 
 Situs web kami saat ini menerima lebih dari 1.500 kunjungan unik setiap harinya, dan jumlah ini terus meningkat setiap bulan. Kami telah melangkah jauh dalam meningkatkan pengalaman Anda menggunakan MiniOS: selain halaman sederhana untuk mendapatkan informasi awal mengenai sistem dan mengunduh distribusi, kini kami telah memiliki [dokumentasi](https://minios.dev/docs). Kami telah mengisi bagian ini dengan artikel mendetail yang mencakup hampir setiap aspek teknis dalam menggunakan sistem ini.
