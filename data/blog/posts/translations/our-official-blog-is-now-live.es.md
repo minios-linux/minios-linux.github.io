@@ -1,26 +1,23 @@
 ---
 title: ¡Nuestro blog oficial ya está disponible!
 excerpt: >-
-  ¡Hola, amigos!
+    ¡Hola, amigos!
 
 
-  Nuestro sitio web recibe actualmente más de 1.500 visitas diarias únicas, y
-  esta cifra crece mes a mes. Ya hemos recorrido un largo camino para mejorar la
-  experiencia con MiniOS: además de una página sencilla donde obtener
-  información inicial sobre el sistema y descargar las distribuciones, ahora
-  contamos con [documentación](https://minios.dev/docs). Hemos completado esta
-  sección con artículos detallados que cubren prácticamente todos los aspectos
-  técnicos del funcionamiento del sistema.
+    Nuestro sitio web recibe actualmente más de 1.500 visitas diarias únicas, y esta cifra crece mes a mes. Ya hemos recorrido un largo camino para mejorar la experiencia con MiniOS: además de una página sencilla donde obtener información inicial sobre el sistema y descargar las distribuciones, ahora contamos con [documentación](https://minios.dev/docs). Hemos completado esta sección con artículos detallados que cubren prácticamente todos los aspectos técnicos del funcionamiento del sistema.
 author: MiniOS Team
 publishedAt: '2026-02-06T13:54:00.000Z'
 updatedAt: '2026-02-06T16:56:59.844Z'
 tags:
-  - news
-  - minios
-  - blog
-  - announcement
+    - news
+    - minios
+    - blog
+    - announcement
 published: true
+telegramPostId: 406
+telegramDiscussion: 'https://t.me/minios_news/406'
 ---
+
 ¡Hola, amigos!
 
 Nuestro sitio web recibe actualmente más de 1.500 visitas diarias únicas, y esta cifra crece mes a mes. Ya hemos recorrido un largo camino para mejorar la experiencia con MiniOS: además de una página sencilla donde obtener información inicial sobre el sistema y descargar las distribuciones, ahora contamos con [documentación](https://minios.dev/docs). Hemos completado esta sección con artículos detallados que cubren prácticamente todos los aspectos técnicos del funcionamiento del sistema.

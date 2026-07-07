@@ -1,27 +1,23 @@
 ---
 title: Notre blog officiel est désormais en ligne !
 excerpt: >-
-  Bonjour à tous !
+    Bonjour à tous !
 
 
-  Notre site reçoit actuellement plus de 1 500 visiteurs uniques par jour, et ce
-  chiffre augmente chaque mois. Nous avons déjà fait beaucoup de chemin pour
-  améliorer votre expérience MiniOS : en plus d'une page simple où vous pouvez
-  obtenir les premières informations sur le système et télécharger les
-  distributions, nous disposons désormais d'une
-  [documentation](https://minios.dev/docs). Nous avons enrichi cette section
-  avec des articles détaillés couvrant pratiquement tous les aspects techniques
-  de l'utilisation du système.
+    Notre site reçoit actuellement plus de 1 500 visiteurs uniques par jour, et ce chiffre augmente chaque mois. Nous avons déjà fait beaucoup de chemin pour améliorer votre expérience MiniOS : en plus d'une page simple où vous pouvez obtenir les premières informations sur le système et télécharger les distributions, nous disposons désormais d'une [documentation](https://minios.dev/docs). Nous avons enrichi cette section avec des articles détaillés couvrant pratiquement tous les aspects techniques de l'utilisation du système.
 author: MiniOS Team
 publishedAt: '2026-02-06T13:54:00.000Z'
 updatedAt: '2026-02-06T16:57:03.612Z'
 tags:
-  - news
-  - minios
-  - blog
-  - announcement
+    - news
+    - minios
+    - blog
+    - announcement
 published: true
+telegramPostId: 406
+telegramDiscussion: 'https://t.me/minios_news/406'
 ---
+
 Bonjour à tous !
 
 Notre site reçoit actuellement plus de 1 500 visiteurs uniques par jour, et ce chiffre augmente chaque mois. Nous avons déjà fait beaucoup de chemin pour améliorer votre expérience MiniOS : en plus d'une page simple où vous pouvez obtenir les premières informations sur le système et télécharger les distributions, nous disposons désormais d'une [documentation](https://minios.dev/docs). Nous avons enrichi cette section avec des articles détaillés couvrant pratiquement tous les aspects techniques de l'utilisation du système.

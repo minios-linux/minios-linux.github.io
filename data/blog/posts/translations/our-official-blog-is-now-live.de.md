@@ -1,25 +1,23 @@
 ---
 title: Unser offizieller Blog ist jetzt live!
 excerpt: >-
-  Hallo Freunde!
+    Hallo Freunde!
 
 
-  Unsere Website verzeichnet derzeit über 1.500 Unique Visits pro Tag, und diese
-  Zahl steigt monatlich. Wir haben bereits viel getan, um euer MiniOS-Erlebnis
-  zu verbessern: Neben einer einfachen Seite mit ersten Informationen zum System
-  und den Downloads gibt es nun eine [Dokumentation](https://minios.dev/docs).
-  Diesen Bereich haben wir mit detaillierten Artikeln gefüllt, die praktisch
-  jeden technischen Aspekt im Umgang mit dem System abdecken.
+    Unsere Website verzeichnet derzeit über 1.500 Unique Visits pro Tag, und diese Zahl steigt monatlich. Wir haben bereits viel getan, um euer MiniOS-Erlebnis zu verbessern: Neben einer einfachen Seite mit ersten Informationen zum System und den Downloads gibt es nun eine [Dokumentation](https://minios.dev/docs). Diesen Bereich haben wir mit detaillierten Artikeln gefüllt, die praktisch jeden technischen Aspekt im Umgang mit dem System abdecken.
 author: MiniOS Team
 publishedAt: '2026-02-06T13:54:00.000Z'
 updatedAt: '2026-02-06T16:57:01.440Z'
 tags:
-  - news
-  - minios
-  - blog
-  - announcement
+    - news
+    - minios
+    - blog
+    - announcement
 published: true
+telegramPostId: 406
+telegramDiscussion: 'https://t.me/minios_news/406'
 ---
+
 Hallo Freunde!
 
 Unsere Website verzeichnet derzeit über 1.500 Unique Visits pro Tag, und diese Zahl steigt monatlich. Wir haben bereits viel getan, um euer MiniOS-Erlebnis zu verbessern: Neben einer einfachen Seite mit ersten Informationen zum System und den Downloads gibt es nun eine [Dokumentation](https://minios.dev/docs). Diesen Bereich haben wir mit detaillierten Artikeln gefüllt, die praktisch jeden technischen Aspekt im Umgang mit dem System abdecken.
