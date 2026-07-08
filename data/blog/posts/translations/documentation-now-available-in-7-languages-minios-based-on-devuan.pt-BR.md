@@ -23,8 +23,8 @@ excerpt: >-
   canal do Telegram**. A primeira imagem pública para quem quiser testar será
   lançada em breve.
 author: crims0n
-publishedAt: '2026-07-08T12:47:00.000Z'
-updatedAt: '2026-07-08T15:47:33.357Z'
+publishedAt: '2026-07-08T15:57:09.261Z'
+updatedAt: '2026-07-08T15:57:09.261Z'
 tags:
   - minios
   - devuan
@@ -35,6 +35,8 @@ tags:
   - sysvinit
 featuredImage: /assets/img/blog/pDIkeqmLigJL94.jpg
 published: true
+telegramDiscussion: 'https://t.me/minios_news/416'
+telegramPostId: 416
 ---
 Recentemente concluímos duas melhorias importantes no MiniOS.
 
