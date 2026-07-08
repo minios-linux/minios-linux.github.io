@@ -185,6 +185,7 @@ interface TelegramConfig {
   siteUrl: string;
   publishToTelegram: boolean;
   delayMinutes: number;
+  proxyUrl?: string;
 }
 
 // Result of save operation with optional Telegram status
@@ -209,7 +210,7 @@ export function useBlogAdmin() {
       excerpt: postData.excerpt || '',
       author: postData.author,
       publishedAt: postData.publishedAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      updatedAt: postData.updatedAt || postData.publishedAt || new Date().toISOString(),
       tags: postData.tags || [],
       featuredImage: postData.featuredImage,
       published: postData.published !== undefined ? postData.published : false,
@@ -247,7 +248,7 @@ export function useBlogAdmin() {
       excerpt: postData.excerpt,
       author: postData.author,
       publishedAt: postData.publishedAt,
-      updatedAt: new Date().toISOString(),
+      updatedAt: postData.updatedAt,
       tags: postData.tags,
       featuredImage: postData.featuredImage,
       published: postData.published,

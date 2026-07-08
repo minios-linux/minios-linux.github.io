@@ -80,6 +80,7 @@ export function BlogManager() {
     siteUrl: string;
     publishToTelegram: boolean;
     delayMinutes: number;
+    proxyUrl?: string;
   }
 
   const handleSavePost = async (

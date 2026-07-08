@@ -641,6 +641,46 @@ function saveBlogPost(slug: string, frontmatter: Record<string, unknown>, conten
   fs.writeFileSync(filePath, fileContent, 'utf-8');
 }
 
+function syncBlogTranslationMetadata(slug: string, frontmatter: Record<string, unknown>): void {
+  const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
+  const translationsDir = path.resolve(postsDir, 'translations');
+
+  if (!fs.existsSync(translationsDir)) {
+    return;
+  }
+
+  const metadataKeys = [
+    'author',
+    'publishedAt',
+    'updatedAt',
+    'tags',
+    'featuredImage',
+    'published',
+    'order',
+    'telegramDiscussion',
+    'telegramPostId'
+  ];
+
+  const files = fs.readdirSync(translationsDir).filter(file => file.startsWith(`${slug}.`) && file.endsWith('.md'));
+
+  for (const file of files) {
+    const filePath = path.resolve(translationsDir, file);
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const parsed = matter(fileContent);
+    const syncedFrontmatter = { ...parsed.data };
+
+    for (const key of metadataKeys) {
+      if (frontmatter[key] === undefined) {
+        delete syncedFrontmatter[key];
+      } else {
+        syncedFrontmatter[key] = frontmatter[key];
+      }
+    }
+
+    fs.writeFileSync(filePath, matter.stringify(parsed.content, syncedFrontmatter), 'utf-8');
+  }
+}
+
 // Delete blog post
 function deleteBlogPost(slug: string): void {
   const postsDir = path.resolve(__dirname, 'data', 'blog', 'posts');
@@ -2025,6 +2065,9 @@ function localDataPlugin() {
 
                 // Save the blog post first
                 saveBlogPost(slug, frontmatter, content, lang);
+                if (!lang || lang === 'en') {
+                  syncBlogTranslationMetadata(slug, frontmatter);
+                }
 
                 // Check if we need to publish to Telegram
                 if (telegramConfig?.publishToTelegram &&
@@ -2037,6 +2080,7 @@ function localDataPlugin() {
                   console.log('[Telegram] Publishing post:', slug);
                   console.log('[Telegram] Channel:', telegramConfig.chatId);
                   console.log('[Telegram] Delay:', telegramConfig.delayMinutes, 'minutes');
+                  console.log('[Telegram] Proxy:', telegramConfig.proxyUrl || '(none)');
 
                   try {
                     const escapeHtml = (text: string): string => {
@@ -2130,20 +2174,21 @@ function localDataPlugin() {
                       }
                       console.log('[Telegram] Sending request...');
 
-                      const response = await fetch(
+                      const response = await apiRequest(
                         `https://api.telegram.org/bot${telegramConfig.botToken}/${method}`,
                         {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify(body)
+                          body: JSON.stringify(body),
+                          proxyUrl: telegramConfig.proxyUrl || undefined
                         }
                       );
 
-                      return response.json() as Promise<{
+                      return JSON.parse(response.data) as {
                         ok: boolean;
                         result?: { message_id: number };
                         description?: string;
-                      }>;
+                      };
                     };
 
                     // Try to send with photo first, fallback to text if image fails

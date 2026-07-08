@@ -17,6 +17,15 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ImageUpload } from './ImageUpload';
 
+const toDateTimeLocalValue = (date: Date): string => {
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return localDate.toISOString().slice(0, 23);
+};
+
+const isoToDateTimeLocalValue = (value?: string): string => {
+  return value ? toDateTimeLocalValue(new Date(value)) : toDateTimeLocalValue(new Date());
+};
+
 // Lazy-loaded Mermaid diagram component for preview
 // Mermaid is ~1.5MB, so we load it only when needed
 const MermaidDiagram: React.FC<{ chart: string }> = ({ chart }) => {
@@ -132,6 +141,7 @@ interface TelegramConfig {
   siteUrl: string;
   publishToTelegram: boolean;
   delayMinutes: number;
+  proxyUrl?: string;
 }
 
 export function MarkdownEditor({
@@ -183,14 +193,10 @@ export function MarkdownEditor({
   
   // Date fields - store as datetime-local format (YYYY-MM-DDTHH:MM)
   const [publishedAt, setPublishedAt] = useState(() => {
-    const initial = initialFrontmatter?.publishedAt;
-    if (initial) return initial.slice(0, 16);
-    return new Date().toISOString().slice(0, 16);
+    return isoToDateTimeLocalValue(initialFrontmatter?.publishedAt);
   });
   const [updatedAt, setUpdatedAt] = useState(() => {
-    const initial = initialFrontmatter?.updatedAt;
-    if (initial) return initial.slice(0, 16);
-    return new Date().toISOString().slice(0, 16);
+    return isoToDateTimeLocalValue(initialFrontmatter?.updatedAt);
   });
   
   // Telegram publishing settings (stored in localStorage)
@@ -198,7 +204,9 @@ export function MarkdownEditor({
   const [telegramBotToken, setTelegramBotToken] = useState(() => localStorage.getItem('telegram-bot-token') || '');
   const [telegramChatId, setTelegramChatId] = useState(() => localStorage.getItem('telegram-chat-id') || '');
   const [telegramSiteUrl, setTelegramSiteUrl] = useState(() => localStorage.getItem('telegram-site-url') || 'https://minios.dev');
+  const [telegramProxyUrl, setTelegramProxyUrl] = useState(() => localStorage.getItem('ai-proxy-url') || '');
   const [showTelegramToken, setShowTelegramToken] = useState(false);
+  const [showTelegramProxy, setShowTelegramProxy] = useState(false);
   const [publishToTelegram, setPublishToTelegram] = useState(false);
   const [telegramDelayMinutes, setTelegramDelayMinutes] = useState(0);
   
@@ -210,7 +218,12 @@ export function MarkdownEditor({
     if (telegramBotToken) localStorage.setItem('telegram-bot-token', telegramBotToken);
     if (telegramChatId) localStorage.setItem('telegram-chat-id', telegramChatId);
     if (telegramSiteUrl) localStorage.setItem('telegram-site-url', telegramSiteUrl);
-  }, [telegramBotToken, telegramChatId, telegramSiteUrl]);
+    if (telegramProxyUrl) {
+      localStorage.setItem('ai-proxy-url', telegramProxyUrl);
+    } else {
+      localStorage.removeItem('ai-proxy-url');
+    }
+  }, [telegramBotToken, telegramChatId, telegramSiteUrl, telegramProxyUrl]);
   
   // Content
   const [content, setContent] = useState(() => getDraftValue(initialContent || undefined, 'content', ''));
@@ -320,7 +333,8 @@ export function MarkdownEditor({
             chatId: telegramChatId,
             siteUrl: telegramSiteUrl,
             publishToTelegram: true,
-            delayMinutes: telegramDelayMinutes
+            delayMinutes: telegramDelayMinutes,
+            proxyUrl: telegramProxyUrl.trim() || undefined
           }
         : undefined;
 
@@ -328,7 +342,7 @@ export function MarkdownEditor({
     
     // Clear draft
     localStorage.removeItem('blog-draft');
-  }, [title, excerpt, author, tags, featuredImage, published, telegramDiscussion, content, initialFrontmatter, onSave, t, publishToTelegram, telegramBotToken, telegramChatId, telegramSiteUrl, telegramDelayMinutes, publishedAt, updatedAt]);
+  }, [title, excerpt, author, tags, featuredImage, published, telegramDiscussion, content, initialFrontmatter, onSave, t, publishToTelegram, telegramBotToken, telegramChatId, telegramSiteUrl, telegramDelayMinutes, telegramProxyUrl, publishedAt, updatedAt]);
 
   // Keyboard shortcuts for formatting
   useEffect(() => {
@@ -484,6 +498,7 @@ export function MarkdownEditor({
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 <Input
                   type="datetime-local"
+                  step="0.001"
                   value={publishedAt}
                   onChange={(e) => setPublishedAt(e.target.value)}
                   className="text-sm"
@@ -493,7 +508,7 @@ export function MarkdownEditor({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => setPublishedAt(new Date().toISOString().slice(0, 16))}
+                  onClick={() => setPublishedAt(toDateTimeLocalValue(new Date()))}
                   title={t('Reset to current time')}
                   className="shrink-0"
                 >
@@ -506,6 +521,7 @@ export function MarkdownEditor({
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 <Input
                   type="datetime-local"
+                  step="0.001"
                   value={updatedAt}
                   onChange={(e) => setUpdatedAt(e.target.value)}
                   className="text-sm"
@@ -515,7 +531,7 @@ export function MarkdownEditor({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => setUpdatedAt(new Date().toISOString().slice(0, 16))}
+                  onClick={() => setUpdatedAt(toDateTimeLocalValue(new Date()))}
                   title={t('Reset to current time')}
                   className="shrink-0"
                 >
@@ -542,7 +558,7 @@ export function MarkdownEditor({
               
               {/* Telegram Settings (collapsible) */}
               {telegramSettingsOpen && (
-                <div className="grid grid-cols-3 gap-3 pl-5 mt-3 animate-in slide-in-from-top-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 pl-5 mt-3 animate-in slide-in-from-top-1">
                   <div>
                     <Label className="text-xs text-muted-foreground mb-1 block">{t('Bot Token')}</Label>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -582,6 +598,28 @@ export function MarkdownEditor({
                       placeholder="https://minios.dev"
                       className="text-sm font-mono"
                     />
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground mb-1 block whitespace-nowrap">{t('HTTP Proxy')} <span className="opacity-60">({t('for geo-restricted APIs')})</span></Label>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Input
+                        type={showTelegramProxy ? 'text' : 'password'}
+                        value={telegramProxyUrl}
+                        onChange={(e) => setTelegramProxyUrl(e.target.value)}
+                        placeholder="http://user:pass@host:port"
+                        style={{ flex: 1, borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRight: 'none' }}
+                        className="text-sm font-mono"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setShowTelegramProxy(!showTelegramProxy)}
+                        style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, flexShrink: 0 }}
+                      >
+                        {showTelegramProxy ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}
