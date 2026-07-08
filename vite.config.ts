@@ -2039,18 +2039,37 @@ function localDataPlugin() {
                   console.log('[Telegram] Delay:', telegramConfig.delayMinutes, 'minutes');
 
                   try {
-                    // Escape Markdown v1 special characters
-                    const escapeMarkdown = (text: string): string => {
+                    const escapeHtml = (text: string): string => {
                       return text
-                        .replace(/\*/g, '\\*')
-                        .replace(/_/g, '\\_')
-                        .replace(/\[/g, '\\[')
-                        .replace(/\]/g, '\\]')
-                        .replace(/`/g, '\\`');
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;');
+                    };
+
+                    const formatMarkdownForTelegram = (text: string): string => {
+                      const markdownPattern = /\*\*([\s\S]+?)\*\*|\[([^\]]+)]\((https?:\/\/[^\s)]+)\)/g;
+                      let formatted = '';
+                      let lastIndex = 0;
+                      let match: RegExpExecArray | null;
+
+                      while ((match = markdownPattern.exec(text)) !== null) {
+                        formatted += escapeHtml(text.slice(lastIndex, match.index));
+
+                        if (match[1]) {
+                          formatted += `<b>${escapeHtml(match[1])}</b>`;
+                        } else {
+                          formatted += `<a href="${escapeHtml(match[3])}">${escapeHtml(match[2])}</a>`;
+                        }
+
+                        lastIndex = markdownPattern.lastIndex;
+                      }
+
+                      return formatted + escapeHtml(text.slice(lastIndex));
                     };
 
                     // Format caption
-                    const caption = `*${escapeMarkdown(frontmatter.title || '')}*\n\n${escapeMarkdown(frontmatter.excerpt || '')}\n\nRead: ${telegramConfig.siteUrl}/blog/${slug}`;
+                    const caption = `<b>${escapeHtml(frontmatter.title || '')}</b>\n\n${formatMarkdownForTelegram(frontmatter.excerpt || '')}\n\nRead: ${escapeHtml(telegramConfig.siteUrl)}/blog/${escapeHtml(slug)}`;
 
                     // Build request body
                     // Check for image: external URL or local path
@@ -2095,13 +2114,13 @@ function localDataPlugin() {
                           chat_id: telegramConfig.chatId,
                           photo: imageUrl as string,
                           caption,
-                          parse_mode: 'Markdown',
+                          parse_mode: 'HTML',
                           ...(scheduleDate && { schedule_date: scheduleDate })
                         }
                         : {
                           chat_id: telegramConfig.chatId,
                           text: caption,
-                          parse_mode: 'Markdown',
+                          parse_mode: 'HTML',
                           ...(scheduleDate && { schedule_date: scheduleDate })
                         };
 
