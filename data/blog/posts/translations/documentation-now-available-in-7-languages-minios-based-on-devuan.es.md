@@ -24,8 +24,8 @@ excerpt: >-
   nuestro canal de Telegram**. Muy pronto publicaremos la primera imagen abierta
   para quien quiera probarla.
 author: crims0n
-publishedAt: '2026-07-07T20:53:00.000Z'
-updatedAt: '2026-07-08T15:41:43.803Z'
+publishedAt: '2026-07-08T12:47:00.000Z'
+updatedAt: '2026-07-08T15:47:33.357Z'
 tags:
   - minios
   - devuan

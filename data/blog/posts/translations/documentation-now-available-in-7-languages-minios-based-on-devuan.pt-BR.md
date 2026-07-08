@@ -23,8 +23,8 @@ excerpt: >-
   canal do Telegram**. A primeira imagem pública para quem quiser testar será
   lançada em breve.
 author: crims0n
-publishedAt: '2026-07-07T20:53:00.000Z'
-updatedAt: '2026-07-08T15:41:53.826Z'
+publishedAt: '2026-07-08T12:47:00.000Z'
+updatedAt: '2026-07-08T15:47:33.357Z'
 tags:
   - minios
   - devuan

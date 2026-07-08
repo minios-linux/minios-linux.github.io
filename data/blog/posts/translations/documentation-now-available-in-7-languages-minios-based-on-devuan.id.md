@@ -23,8 +23,8 @@ excerpt: >-
   kami**. Image publik pertama untuk siapa saja yang ingin mencoba akan segera
   dirilis.
 author: crims0n
-publishedAt: '2026-07-07T20:53:00.000Z'
-updatedAt: '2026-07-08T15:41:44.207Z'
+publishedAt: '2026-07-08T12:47:00.000Z'
+updatedAt: '2026-07-08T15:47:33.357Z'
 tags:
   - minios
   - devuan
