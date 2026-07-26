@@ -8,6 +8,8 @@ import type { ViteDevServer, Connect } from 'vite'
 import matter from 'gray-matter'
 import { marked } from 'marked'
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 // Default timeout for API requests (ms)
 const API_TIMEOUT = 30000;
 
@@ -3067,7 +3069,7 @@ export default defineConfig(() => {
 
   return {
     base,
-    plugins: [react(), localDataPlugin()],
+    plugins: [react(), localDataPlugin(), cloudflare()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
