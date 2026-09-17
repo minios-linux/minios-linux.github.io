@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import AnnouncementBanner from './AnnouncementBanner';
+import TelegramButton from './TelegramButton';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ const Layout: React.FC<LayoutProps> = ({ children, onShowLanding }) => {
       <Header onShowLanding={onShowLanding} />
       <AnnouncementBanner />
       {children}
+      <TelegramButton />
       <Footer />
     </>
   );
